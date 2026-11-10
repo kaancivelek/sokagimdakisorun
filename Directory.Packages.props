@@ -1,0 +1,13 @@
+<Project>
+
+  <!-- Merkezi paket yönetimi: sürümler yalnızca burada durur. Yeni paket PR'da gerekçelendirilir. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup Label="Test">
+    <!-- xunit.v3, Microsoft.Testing.Platform üzerinde çalışır; .NET 10'da ayrı test SDK'sı/VSTest adaptörü gerekmez. -->
+    <PackageVersion Include="xunit.v3" Version="4.0.3" />
+  </ItemGroup>
+
+</Project>

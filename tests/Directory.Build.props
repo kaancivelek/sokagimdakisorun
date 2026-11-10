@@ -1,0 +1,22 @@
+<Project>
+
+  <!-- Üst dizindeki ortak ayarları devral. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <!-- İskelet aşamasında hiç test yok; MTP "sıfır test çalıştı" (çıkış kodu 8) durumunu hata saymasın.
+         İlk gerçek test eklenirken ilgili iş akışı bu satırı kaldırır. -->
+    <TestingPlatformCommandLineArguments>--ignore-exit-code 8</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

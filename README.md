@@ -4,7 +4,7 @@ Vatandaşların kentsel sorunları **WhatsApp** üzerinden bildirdiği, bildirim
 
 Ürün davranışı [FixMyStreet](https://github.com/mysociety/fixmystreet)'in vatandaş odaklı bildirim modelinden esinlenir; **FixMyStreet kodu bu depoda yer almaz ve kopyalanmaz.**
 
-> **Durum (2026-11-11):** Mimari hazırlık tamamlandı. Depoda henüz uygulama kodu yok; yalnızca mimari dokümanlar var. İlk implementasyon adımı için bkz. [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md).
+> **Durum (2026-11-11):** Mimari hazırlık tamamlandı; proje iskeleti (WS-01) hazır: solution, boş modül projeleri, test iskeletleri ve yerel PostgreSQL. Henüz iş mantığı, uç nokta ve veritabanı yok. Güncel durum için bkz. [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md).
 
 ## Adlandırma
 
@@ -28,6 +28,31 @@ Vatandaşların kentsel sorunları **WhatsApp** üzerinden bildirdiği, bildirim
 | Deployment | Railway (sonraki faz) |
 
 Sürüm gerekçeleri: [ADR-0005](docs/decisions/ADR-0005-runtime-and-framework-versions.md).
+
+## Yerel çalıştırma
+
+Gereksinimler: Git, Docker Desktop (Compose), .NET SDK 10.0 (`global.json` 10.0 hattına sabitler). Node.js 26 ve npm yalnızca panel (`web/`, WS-09) eklendiğinde gerekir.
+
+```bash
+# 1) Yerel ortam dosyasını oluştur (.env git dışıdır; örnekteki değerler sahtedir)
+cp .env.example .env
+
+# 2) Yalnızca PostgreSQL 18 konteynerini başlat (host portu 54318, yalnızca 127.0.0.1)
+docker compose up -d
+
+# 3) Derle ve test et
+dotnet build
+dotnet test
+```
+
+- Compose dosyasını başlatmadan doğrulamak için: `docker compose --env-file .env.example config`.
+- PostgreSQL 18 imajında veri dizini `/var/lib/postgresql/18/docker`'dır; volume `/var/lib/postgresql` yoluna bağlanır (imaj dokümanından doğrulandı). Veriyi silmek için: `docker compose down -v`.
+- API ve panel konteynerde çalışmaz; host makinede çalıştırılır ([docs/ARCHITECTURE.md §10](docs/ARCHITECTURE.md#10-yerel-geliştirme-ortamı)). `dotnet` `.env` dosyasını okumaz; API'nin ihtiyaç duyduğu `ConnectionStrings__Default` gibi değerleri ortam değişkeni olarak verin (örnek: `.env.example`). API host'u WS-02'de doldurulur; şu an `src/SokagimdakiSorun.Api` yalnızca boş bir iskelettir.
+- Testler xunit v3 + Microsoft Testing Platform kullanır; `global.json` içindeki `test.runner` ayarı `dotnet test`'in bu modda çalışması için gereklidir. İskelet aşamasında test yoktur ve "sıfır test" sonucu başarı sayılır (`tests/Directory.Build.props`).
+
+### Çözüm düzeni
+
+`SokagimdakiSorun.slnx` tüm projeleri içerir. Proje referans kuralları ve modül sınırları: [docs/ARCHITECTURE.md §2](docs/ARCHITECTURE.md#2-çözüm-düzeni-hedef). Bir modül başka modülün yalnızca `*.Contracts` projesine referans verebilir.
 
 ## Doküman haritası
 

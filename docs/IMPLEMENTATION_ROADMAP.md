@@ -12,8 +12,8 @@ Sıra, gerçek teknik bağımlılıklara göre belirlenmiştir. İş akışları
 | # | İş akışı | Branch | Durum |
 |---|---|---|---|
 | WS-00 | Mimari hazırlık | `main` (ilk commit) | ✅ Tamamlandı (2026-11-11) |
-| WS-01 | Proje iskeleti | `chore/project-bootstrap` | ⏭️ **Sıradaki** |
-| WS-02 | API host | `feature/backend-host` | Bekliyor |
+| WS-01 | Proje iskeleti | `chore/project-bootstrap` | İncelemede (yerel branch; remote olmadığından PR açılmadı) |
+| WS-02 | API host | `feature/backend-host` | ⏭️ **Sıradaki** (WS-01 `main`'e girince) |
 | WS-03 | Veritabanı temeli | `feature/database-foundation` | Bekliyor |
 | WS-04 | Identity modülü | `feature/backend-identity` | Bekliyor |
 | WS-05 | Media modülü | `feature/backend-media` | Bekliyor |
@@ -154,7 +154,7 @@ Aşağıdakiler ihtiyaç kanıtlanmadan yapılmaz; yapılacaksa önce bu doküma
 | V-1 | .NET 10 yerleşik OpenAPI ile build-zamanı belge üretimi | WS-02 | Resmî Microsoft dokümanı |
 | V-2 | EF Core 10 için `snake_case` adlandırma yaklaşımı (paket mi, elle eşleme mi) | WS-03 | Paket EF Core 10 ile uyumlu değilse elle eşleme |
 | V-3 | Paylaşılan outbox tablosunun modül `DbContext`'lerinde migration dışı eşlenmesi | WS-03 | [ADR-0002](decisions/ADR-0002-postgresql-data-ownership.md) |
-| V-4 | Resmî PostgreSQL 18 konteyner imajının veri dizini / volume yolu | WS-01 | İmaj dokümanından doğrula |
+| V-4 | Resmî PostgreSQL 18 konteyner imajının veri dizini / volume yolu | WS-01 | ✅ Doğrulandı (2026-11-11, Docker Hub `postgres` sayfası): 18+ imajında `VOLUME /var/lib/postgresql`, varsayılan `PGDATA=/var/lib/postgresql/18/docker`; `docker-compose.yml` volume'u `/var/lib/postgresql`'e bağlar. |
 | V-5 | ASP.NET Core Identity ile parolasız şikâyetçi kaydı ve token uç noktaları | WS-04 | [ADR-0006](decisions/ADR-0006-admin-panel-authentication.md) |
 | V-6 | Npgsql'de iyimser eşzamanlılık (`xmin`) kullanımı | WS-06 | Npgsql dokümanı |
 | V-7 | Next.js 16'nın asgari Node.js sürümü; Server Action/CSRF davranışı | WS-09 | Resmî Next.js dokümanı |

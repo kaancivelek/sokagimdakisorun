@@ -1,0 +1,16 @@
+# Satır sonu normalizasyonu: depoda LF, çalışma dizininde de LF (Windows'ta LF/CRLF uyarılarını önler).
+* text=auto eol=lf
+
+# Windows'a özgü betikler CRLF kalır.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# İkili dosyalar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary

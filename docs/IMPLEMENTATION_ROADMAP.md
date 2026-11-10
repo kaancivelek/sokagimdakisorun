@@ -13,8 +13,8 @@ Sıra, gerçek teknik bağımlılıklara göre belirlenmiştir. İş akışları
 |---|---|---|---|
 | WS-00 | Mimari hazırlık | `main` (ilk commit) | ✅ Tamamlandı (2026-11-11) |
 | WS-01 | Proje iskeleti | `chore/project-bootstrap` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
-| WS-02 | API host | `feature/backend-host` | İncelemede (PR açıklaması hazır; remote yok) |
-| WS-03 | Veritabanı temeli | `feature/database-foundation` | Bekliyor |
+| WS-02 | API host | `feature/backend-host` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
+| WS-03 | Veritabanı temeli | `feature/database-foundation` | Devam ediyor |
 | WS-04 | Identity modülü | `feature/backend-identity` | Bekliyor |
 | WS-05 | Media modülü | `feature/backend-media` | Bekliyor |
 | WS-06 | Complaints modülü | `feature/backend-complaints` | Bekliyor |

@@ -12,15 +12,15 @@ public sealed class HostPipelineTests
 {
     private static CancellationToken Ct => TestContext.Current.CancellationToken;
 
-    [Theory]
-    [InlineData("/health/live")]
-    [InlineData("/health/ready")]
-    public async Task Health_endpoints_answer_anonymously_without_details(string path)
+    // /health/ready WS-03'ten beri veritabanını kontrol eder; veritabanısız ve veritabanlı davranışı
+    // Database/ReadinessTests.cs içinde doğrulanır.
+    [Fact]
+    public async Task Live_endpoint_answers_anonymously_without_details()
     {
         await using var factory = HostFactory.Create("Production");
         using var client = factory.CreateClient();
 
-        using var response = await client.GetAsync(path, Ct);
+        using var response = await client.GetAsync("/health/live", Ct);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("Healthy", await response.Content.ReadAsStringAsync(Ct));

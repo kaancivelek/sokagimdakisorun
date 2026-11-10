@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Modules\Complaints\SokagimdakiSorun.Complaints\SokagimdakiSorun.Complaints.csproj" />
+  </ItemGroup>
+
+</Project>

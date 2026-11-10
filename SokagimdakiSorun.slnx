@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SokagimdakiSorun.Api/SokagimdakiSorun.Api.csproj" />
+    <Project Path="src/SokagimdakiSorun.Platform/SokagimdakiSorun.Platform.csproj" />
+    <Project Path="src/SokagimdakiSorun.SharedKernel/SokagimdakiSorun.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Identity/">
+    <Project Path="src/Modules/Identity/SokagimdakiSorun.Identity/SokagimdakiSorun.Identity.csproj" />
+    <Project Path="src/Modules/Identity/SokagimdakiSorun.Identity.Contracts/SokagimdakiSorun.Identity.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Complaints/">
+    <Project Path="src/Modules/Complaints/SokagimdakiSorun.Complaints/SokagimdakiSorun.Complaints.csproj" />
+    <Project Path="src/Modules/Complaints/SokagimdakiSorun.Complaints.Contracts/SokagimdakiSorun.Complaints.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Messaging/">
+    <Project Path="src/Modules/Messaging/SokagimdakiSorun.Messaging/SokagimdakiSorun.Messaging.csproj" />
+    <Project Path="src/Modules/Messaging/SokagimdakiSorun.Messaging.Contracts/SokagimdakiSorun.Messaging.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Media/">
+    <Project Path="src/Modules/Media/SokagimdakiSorun.Media/SokagimdakiSorun.Media.csproj" />
+    <Project Path="src/Modules/Media/SokagimdakiSorun.Media.Contracts/SokagimdakiSorun.Media.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Reporting/">
+    <Project Path="src/Modules/Reporting/SokagimdakiSorun.Reporting/SokagimdakiSorun.Reporting.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SokagimdakiSorun.Identity.Tests/SokagimdakiSorun.Identity.Tests.csproj" />
+    <Project Path="tests/SokagimdakiSorun.Complaints.Tests/SokagimdakiSorun.Complaints.Tests.csproj" />
+    <Project Path="tests/SokagimdakiSorun.Messaging.Tests/SokagimdakiSorun.Messaging.Tests.csproj" />
+    <Project Path="tests/SokagimdakiSorun.Media.Tests/SokagimdakiSorun.Media.Tests.csproj" />
+    <Project Path="tests/SokagimdakiSorun.Reporting.Tests/SokagimdakiSorun.Reporting.Tests.csproj" />
+    <Project Path="tests/SokagimdakiSorun.IntegrationTests/SokagimdakiSorun.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

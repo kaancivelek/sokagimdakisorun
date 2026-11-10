@@ -1,0 +1,28 @@
+# Yalnızca yerel geliştirme için PostgreSQL 18. API ve panel konteynerde çalışmaz (docs/ARCHITECTURE.md §10).
+# Başlatmak için önce `.env.example` dosyasını `.env` olarak kopyalayın.
+name: sokagimdakisorun
+
+services:
+  postgres:
+    # Ana sürüme sabitli; `latest` kullanılmaz (ADR-0005).
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER .env dosyasında tanımlı olmalı}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD .env dosyasında tanımlı olmalı}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB .env dosyasında tanımlı olmalı}
+    ports:
+      # Yalnızca loopback; makinedeki diğer konteynerlerle çakışmaması için standart dışı host portu.
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-54318}:5432"
+    volumes:
+      # PostgreSQL 18+ resmî imajında VOLUME /var/lib/postgresql'dir (PGDATA: /var/lib/postgresql/18/docker).
+      # Eski /var/lib/postgresql/data yoluna bağlamayın.
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:

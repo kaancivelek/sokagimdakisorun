@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\SokagimdakiSorun.SharedKernel\SokagimdakiSorun.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\SokagimdakiSorun.Platform\SokagimdakiSorun.Platform.csproj" />
+    <ProjectReference Include="..\SokagimdakiSorun.Media.Contracts\SokagimdakiSorun.Media.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

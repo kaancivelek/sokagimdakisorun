@@ -139,8 +139,8 @@ Aşağıdakiler ihtiyaç kanıtlanmadan yapılmaz; yapılacaksa önce bu doküma
 
 | # | Karar | Varsayılan | Ne zaman gerekli |
 |---|---|---|---|
-| OD-1 | Kod kökü adı: `SokagimdakiSorun` | Kabul edilmiş sayılır | WS-01 başlamadan |
-| OD-2 | Depo lisansı | Lisans dosyası yok | Depo herkese açılmadan |
+| OD-1 | Kod kökü adı: `SokagimdakiSorun` | ✅ Karar verildi (2026-11-11) | — |
+| OD-2 | Depo lisansı | ✅ Karar verildi (2026-11-11): GNU AGPL v3 (`LICENSE`) | — |
 | OD-3 | `AwaitingInformation → InProgress` dönüşü eklensin mi | Hayır (öneri: evet) | WS-06 başlamadan |
 | OD-4 | Triage havuzu tüm moderatörlere açık | Evet | WS-06 başlamadan |
 | OD-5 | Skill dosyalarının depoya taşınması | Öneri: evet | WS-01 içinde |

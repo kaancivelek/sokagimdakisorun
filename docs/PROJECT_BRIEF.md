@@ -65,7 +65,7 @@ FixMyStreet yalnızca **ürün davranışı referansıdır**. Workspace'teki `fi
 | MapIt ile bölge tespiti | — | MVP dışı; pilot alan tek bölge kabul edilir |
 | Herkese açık bildirim sayfası | — | MVP'de tüm kayıtlar özeldir |
 
-**Lisans notu (hukuki danışmanlık değildir):** FixMyStreet AGPL-3.0-or-later lisanslıdır. Bu projeye FixMyStreet'ten **kod, şablon veya çeviri metni (`.po`) kopyalanmaz**; yalnızca kavramlar ve iş akışı fikirleri kullanılır. Kopyalama ihtiyacı doğarsa önce lisans etkisi değerlendirilir.
+**Lisans notu (hukuki danışmanlık değildir):** FixMyStreet AGPL-3.0-or-later lisanslıdır. Bu projeye FixMyStreet'ten **kod, şablon veya çeviri metni (`.po`) kopyalanmaz**; yalnızca kavramlar ve iş akışı fikirleri kullanılır. Kopyalama ihtiyacı doğarsa önce lisans etkisi değerlendirilir. Bu depo da AGPL v3 ile lisanslandığından (OD-2) lisanslar uyumludur; yine de kopyalanan her parça kaynağı ve telif bildirimiyle birlikte işaretlenmelidir.
 
 > Workspace kökündeki `CLAUDE.MD` daha önceki "FixMyStreet'i çatalla ve uyarla" yaklaşımını anlatır ve backend'in yeniden yazılmamasını önerir. O öneri **bu proje için geçerli değildir**; proje sahibi yeni teknoloji yığınıyla yeniden uygulama kararını vermiştir. Çelişki durumunda bu `docs/` klasörü esas alınır.
 
@@ -136,8 +136,8 @@ Proje sahibinin onayını bekleyen veya ilgili sohbette doğrulanacak konular. A
 
 | # | Konu | Varsayılan / öneri |
 |---|---|---|
-| OD-1 | Kod kökü adı `SokagimdakiSorun` mı, `KentGozu` mu? | `SokagimdakiSorun` (bootstrap'ten önce değiştirmesi ucuz) |
-| OD-2 | Depo lisansı | Karar verilene kadar lisans dosyası eklenmez |
+| OD-1 | Kod kökü adı | ✅ Karar verildi (2026-11-11): `SokagimdakiSorun` |
+| OD-2 | Depo lisansı | ✅ Karar verildi (2026-11-11): GNU AGPL v3 — kök dizindeki `LICENSE` |
 | OD-3 | `InProgress → AwaitingInformation` sonrası dönüş `InProgress`'e yapılabilsin mi? | Şimdilik hayır (yalnızca `UnderReview`); öneri: evet |
 | OD-4 | Triage havuzu (atanmamış şikâyetler) tüm moderatörlere açık mı? | Evet |
 | OD-5 | Skill dosyaları depoya taşınsın mı? | Evet, bootstrap sohbetinde (worktree oturumları skill'i görebilsin) |

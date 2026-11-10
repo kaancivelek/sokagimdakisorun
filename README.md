@@ -55,4 +55,4 @@ Ayrıntı: [docs/WORKSTREAMS_AND_BRANCHES.md](docs/WORKSTREAMS_AND_BRANCHES.md).
 
 ## Lisans
 
-Henüz belirlenmedi (bkz. [PROJECT_BRIEF — Açık kararlar](docs/PROJECT_BRIEF.md#9-açık-kararlar)).
+[GNU Affero General Public License v3](LICENSE) (AGPL-3.0). Değiştirilmiş sürümü ağ üzerinden kullanıcılara sunan herkes, o sürümün kaynak kodunu da bu kullanıcılara sunmakla yükümlüdür (lisansın 13. maddesi).

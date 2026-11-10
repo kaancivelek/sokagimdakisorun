@@ -75,5 +75,5 @@ Bu, "başka schema'ya yazma" yasağının tek istisnasıdır.
 
 - Modüller arası yetim referans teorik olarak mümkündür. Azaltma: yazma anında doğrulama; kullanıcı ve şikâyet kayıtlarının silinmemesi.
 - Birleşik liste ekranları (ör. şikâyet + şikâyetçi adı) iki adımlı sorgu gerektirir. Toplu sorgu sözleşmeleriyle çözülür.
-- Paylaşılan outbox eşlemesinin migration dışı tutulması teknik olarak doğrulanmalıdır (yol haritasında V-3). Mümkün olmazsa bu ADR güncellenir ve modül başına outbox'a geçilir.
-- `snake_case` için kullanılacak yaklaşım EF Core 10 ile doğrulanmalıdır (V-2).
+- Paylaşılan outbox eşlemesinin migration dışı tutulması teknik olarak doğrulanmalıdır (yol haritasında V-3). Mümkün olmazsa bu ADR güncellenir ve modül başına outbox'a geçilir. → **Doğrulandı (WS-03, 2026-11-11):** `ExcludeFromMigrations` ile; karar değişmedi.
+- `snake_case` için kullanılacak yaklaşım EF Core 10 ile doğrulanmalıdır (V-2). → **Doğrulandı (WS-03, 2026-11-11):** `EFCore.NamingConventions` 10.0.1.

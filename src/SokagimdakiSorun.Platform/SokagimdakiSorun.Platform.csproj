@@ -1,5 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Teknik altyapı: persistence konvansiyonları, PlatformDbContext, outbox ve dağıtıcısı (ADR-0002, ARCHITECTURE §4.2).
+       Hosting, options ve health check soyutlamaları paylaşılan çerçeveden gelir (modül projeleriyle aynı). -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="EFCore.NamingConventions" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="SokagimdakiSorun.IntegrationTests" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\SokagimdakiSorun.SharedKernel\SokagimdakiSorun.SharedKernel.csproj" />
   </ItemGroup>

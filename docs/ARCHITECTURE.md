@@ -296,7 +296,8 @@ Planlanan anahtarlar (kesin adları ilgili sohbet belirler ve `.env.example`'a e
 | Anahtar | Sahibi | Secret? |
 |---|---|---|
 | `ConnectionStrings__Default` | Platform | Evet |
-| `Database__ApplyMigrationsOnStartup` | Platform | Hayır |
+| `Database__ApplyMigrationsOnStartup` (varsayılan `false`; yalnızca geliştirme) | Platform | Hayır |
+| `Outbox__Enabled`, `Outbox__PollingInterval`, `Outbox__BatchSize`, `Outbox__MaxAttempts`, `Outbox__BaseRetryDelay`, `Outbox__MaxRetryDelay` (hepsinin varsayılanı var) | Platform | Hayır |
 | `Media__RootPath` | Media | Hayır |
 | `WhatsApp__Provider` (`Mock` \| `CloudApi`) | Messaging | Hayır |
 | `WhatsApp__VerifyToken`, `WhatsApp__AppSecret`, `WhatsApp__AccessToken` | Messaging | Evet |
@@ -306,6 +307,8 @@ Planlanan anahtarlar (kesin adları ilgili sohbet belirler ve `.env.example`'a e
 | `SESSION_SECRET` (Next.js) | web | Evet |
 
 `NEXT_PUBLIC_` önekli değişkenlere secret konmaz.
+
+Platform anahtarlarının davranışı (WS-03): bağlantı dizesi kayıt sırasında değil bağlam ilk oluşturulduğunda okunur; yoksa `/health/ready` "Unhealthy" döner ve outbox dağıtıcısı çalışmaz. Build-zamanı araçlarında (`GetDocument.Insider`, `dotnet ef`) açılış migration'ı ve dağıtıcı çalışmaz. Yeni modül bağlamı: [guides/ADDING_A_MODULE_DBCONTEXT](guides/ADDING_A_MODULE_DBCONTEXT.md).
 
 ## 10. Yerel geliştirme ortamı
 

@@ -3,10 +3,13 @@
   <ItemGroup>
     <!-- Host/ altındaki bileşen testleri (WS-02) WebApplicationFactory ile in-memory host kurar. -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <!-- Database/ altındaki odaklı entegrasyon testleri gerçek PostgreSQL 18 konteyneri kullanır (Docker gerekir). -->
+    <PackageReference Include="Testcontainers.PostgreSql" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SokagimdakiSorun.Api\SokagimdakiSorun.Api.csproj" />
+    <ProjectReference Include="..\..\src\SokagimdakiSorun.Platform\SokagimdakiSorun.Platform.csproj" />
   </ItemGroup>
 
 </Project>

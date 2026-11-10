@@ -7,6 +7,7 @@ using SokagimdakiSorun.Complaints;
 using SokagimdakiSorun.Identity;
 using SokagimdakiSorun.Media;
 using SokagimdakiSorun.Messaging;
+using SokagimdakiSorun.Platform;
 using SokagimdakiSorun.Reporting;
 
 // Composition root (docs/ARCHITECTURE.md §3). İş kuralı içermez; yalnızca altyapıyı kurar
@@ -21,6 +22,10 @@ builder.Services.AddApiHealthChecks();
 builder.Services.AddApiOpenApi();
 builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+// Platform modüllerden önce: PlatformDbContext, açılış migration'ı (Database__ApplyMigrationsOnStartup), OutboxDispatcher.
+// Veritabanına kayıt sırasında değil, ilk kullanımda bağlanılır; build-zamanı OpenAPI üretimi veritabanı istemez.
+builder.Services.AddPlatform(builder.Configuration);
 
 builder.Services.AddIdentityModule(builder.Configuration);
 builder.Services.AddMediaModule(builder.Configuration);

@@ -148,7 +148,7 @@ Dosya önce `Temporary` olarak kaydedilir; bir şikâyete bağlandığında `Com
 
 | Tablo | MVP | Not |
 |---|---|---|
-| `outbox_messages` | ✔ | `id`, `type`, `payload` (jsonb), `occurred_at`, `available_at`, `attempt_count`, `processed_at`, `last_error`. Bekleyenleri taramak için `(processed_at, available_at)` index'i. |
+| `outbox_messages` | ✔ | `id` (= event'in `EventId`'si), `type`, `payload` (jsonb), `occurred_at`, `available_at`, `attempt_count`, `processed_at`, `dead_lettered_at`, `last_error`. Bekleyenleri taramak için `available_at` üzerinde kısmi index `ix_outbox_messages_pending` (`WHERE processed_at IS NULL AND dead_lettered_at IS NULL`). `CHECK`: `attempt_count >= 0`; `processed_at` ve `dead_lettered_at` aynı anda dolu olamaz. Migration: `InitialPlatform` (WS-03). |
 | `audit_logs` | ⏳ | Şikâyet hareketleri zaten `complaint_status_history` ve `complaint_assignments` ile izlenir. Bu tablo, Identity'de rol/kullanıcı yönetimi geldiğinde değerlendirilir. |
 | `system_settings` | ✖ | Dinamik ayar ihtiyacı kanıtlanana kadar oluşturulmaz. Secret'lar hiçbir zaman burada tutulmaz. |
 

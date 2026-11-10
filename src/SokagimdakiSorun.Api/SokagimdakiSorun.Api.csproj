@@ -1,5 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <!-- Build-zamanı OpenAPI üretimi (docs/API_CONTRACT_STRATEGY.md §1, yol haritası V-1).
+       Microsoft.Extensions.ApiDescription.Server, build sonunda uygulamanın giriş noktasını sahte bir
+       sunucuyla çalıştırır ve "v1" belgesini obj/openapi/openapi.json olarak yazar. Araç dosya adında
+       nokta kabul etmediği için belge ardından docs/api/openapi.v1.json anlık görüntüsüne kopyalanır.
+       Anlık görüntüye dokunmadan derlemek için: dotnet build -p:OpenApiGenerateDocuments=false -->
+  <PropertyGroup>
+    <OpenApiDocumentsDirectory>$(BaseIntermediateOutputPath)openapi</OpenApiDocumentsDirectory>
+    <OpenApiGenerateDocumentsOptions>--document-name v1 --file-name openapi</OpenApiGenerateDocumentsOptions>
+    <OpenApiSnapshotPath>$(MSBuildProjectDirectory)/../../docs/api/openapi.v1.json</OpenApiSnapshotPath>
+  </PropertyGroup>
+
+  <Target Name="CopyOpenApiSnapshot" AfterTargets="GenerateOpenApiDocuments" Condition=" '$(OpenApiGenerateDocuments)' == 'true' ">
+    <Copy SourceFiles="$(OpenApiDocumentsDirectory)/openapi.json" DestinationFiles="$(OpenApiSnapshotPath)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\SokagimdakiSorun.SharedKernel\SokagimdakiSorun.SharedKernel.csproj" />
     <ProjectReference Include="..\SokagimdakiSorun.Platform\SokagimdakiSorun.Platform.csproj" />

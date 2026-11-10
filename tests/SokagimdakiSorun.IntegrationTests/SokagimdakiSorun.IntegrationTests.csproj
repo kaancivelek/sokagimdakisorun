@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <!-- Host/ altındaki bileşen testleri (WS-02) WebApplicationFactory ile in-memory host kurar. -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\SokagimdakiSorun.Api\SokagimdakiSorun.Api.csproj" />
   </ItemGroup>
 

@@ -13,7 +13,7 @@ Sıra, gerçek teknik bağımlılıklara göre belirlenmiştir. İş akışları
 |---|---|---|---|
 | WS-00 | Mimari hazırlık | `main` (ilk commit) | ✅ Tamamlandı (2026-11-11) |
 | WS-01 | Proje iskeleti | `chore/project-bootstrap` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
-| WS-02 | API host | `feature/backend-host` | Devam ediyor |
+| WS-02 | API host | `feature/backend-host` | İncelemede (PR açıklaması hazır; remote yok) |
 | WS-03 | Veritabanı temeli | `feature/database-foundation` | Bekliyor |
 | WS-04 | Identity modülü | `feature/backend-identity` | Bekliyor |
 | WS-05 | Media modülü | `feature/backend-media` | Bekliyor |
@@ -151,7 +151,7 @@ Aşağıdakiler ihtiyaç kanıtlanmadan yapılmaz; yapılacaksa önce bu doküma
 
 | # | Konu | Sohbet | Not |
 |---|---|---|---|
-| V-1 | .NET 10 yerleşik OpenAPI ile build-zamanı belge üretimi | WS-02 | Resmî Microsoft dokümanı |
+| V-1 | .NET 10 yerleşik OpenAPI ile build-zamanı belge üretimi | WS-02 | ✅ Doğrulandı (2026-11-11, Microsoft Learn "Generate OpenAPI documents", aspnetcore-10.0): çalışma zamanı belgesi `Microsoft.AspNetCore.OpenApi` (`AddOpenApi`/`MapOpenApi`), build-zamanı üretim `Microsoft.Extensions.ApiDescription.Server` (MSBuild `OpenApiDocumentsDirectory`, `OpenApiGenerateDocumentsOptions`: `--document-name`, `--file-name`); .NET 10 varsayılanı OpenAPI 3.1. Araç `--file-name` içinde nokta kabul etmediği için belge `obj/openapi/openapi.json`'a üretilip `CopyOpenApiSnapshot` hedefiyle `docs/api/openapi.v1.json`'a kopyalanır. Build-zamanı üretim `Program`'ı sahte sunucuyla çalıştırır (`GetDocument.Insider`); açılışta dış kaynağa bağlanan kod buna göre koşullanmalıdır (WS-03 notu). |
 | V-2 | EF Core 10 için `snake_case` adlandırma yaklaşımı (paket mi, elle eşleme mi) | WS-03 | Paket EF Core 10 ile uyumlu değilse elle eşleme |
 | V-3 | Paylaşılan outbox tablosunun modül `DbContext`'lerinde migration dışı eşlenmesi | WS-03 | [ADR-0002](decisions/ADR-0002-postgresql-data-ownership.md) |
 | V-4 | Resmî PostgreSQL 18 konteyner imajının veri dizini / volume yolu | WS-01 | ✅ Doğrulandı (2026-11-11, Docker Hub `postgres` sayfası): 18+ imajında `VOLUME /var/lib/postgresql`, varsayılan `PGDATA=/var/lib/postgresql/18/docker`; `docker-compose.yml` volume'u `/var/lib/postgresql`'e bağlar. |

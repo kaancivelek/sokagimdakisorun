@@ -90,6 +90,16 @@ erDiagram
 | `complaint_attachments` | ✔ | `complaint_id` FK, `media_file_id` (skaler, UNIQUE), `source` (`Intake` \| `InformationReply` \| `Panel`), `added_by_user_id`, `created_at`. **Dosya yolu veya storage key içermez.** |
 | `complaint_tags`, `complaint_tag_links` | ✖ | İhtiyaç yok. |
 
+**WS-06 netleştirmeleri (migration `InitialComplaints`):**
+
+- `complaints.awaiting_information_entry_status` (nullable): kaydın `AwaitingInformation`'a girdiği durum (`UnderReview` \| `InProgress`). CHECK `ck_complaints_awaiting_entry`: yalnızca `AwaitingInformation` iken dolu. OD-3'teki "giriş durumu kalıcı veriden belirlenir" seçimi budur.
+- `complaints` ek CHECK'leri: koordinat çifti birlikte dolu/boş; `Duplicate` ⇔ `duplicate_of_complaint_id` dolu; `Resolved` ⇒ `resolved_at`, `Closed` ⇒ `closed_at` dolu; `public_reference` deseni. Eşzamanlılık belirteci `xmin` (V-6).
+- `complaint_status_history.source_message_id` (nullable, **kısmi UNIQUE**): şikâyetçi eylemlerinde (`ProvideInformation`, `Withdraw`) idempotency anahtarı. CHECK: `actor_kind = 'System'` ⇔ `actor_user_id IS NULL`. İlk satır (#1) `System` / `WhatsApp` olarak yazılır ("sistem, şikâyetçi adına"). Yalnızca-ekleme kuralı bağlamda da zorlanır (değiştirme/silme `SaveChanges`'ta reddedilir).
+- `complaint_assignments.unassigned_by_user_id`, `unassign_reason`: atamayı kapatan kişi ve gerekçe (açılış gerekçesi `reason`'da). `Reopen` (#21/#22) aktif atamayı kapatır; şikâyet triage havuzuna döner.
+- `complaint_comments.author_user_id` zorunlu (şikâyetçi yorumunda şikâyetçinin kimliği). `routing_rules`: UNIQUE(`category_id`, `service_unit_id`); `district` MVP'de hep NULL.
+- `complaint_categories.code` ve `service_units.code` CHECK `^[a-z0-9]+(-[a-z0-9]+)*$`. Kategori/birim silinmez, `is_active` ile kapatılır.
+- Tüm modül içi FK'ler `ON DELETE RESTRICT`.
+
 **Hizmet birimi üyeliği neden burada?** Kapsam filtresi ("moderatör yalnızca kendi birimine atanmış şikâyetleri görür") şikâyet listesinin en sık sorgusudur ve `complaints → complaint_assignments → service_unit_members` birleşimi gerektirir. Üçü de aynı schema'da olunca modül sınırı aşılmaz ve `service_units`'e gerçek FK kurulabilir.
 
 #### 3.2.1 `complaints` tablosu
@@ -251,7 +261,7 @@ Ek kurallar:
 - **Durum değiştirmeyen atama değişikliği:** `Assigned` durumundaki bir şikâyetin birimi/kişisi değiştirilirse durum aynı kalır; eski atama kapatılır, yenisi açılır. Bu hareket `complaint_assignments`'ta izlenir, durum geçmişine satır eklenmez.
 - **Tekrar (duplicate):** hedef şikâyet kendisi olamaz; hedef de `Duplicate` durumunda olamaz (zincir/döngü engeli).
 - **Terminal durumlardan geri dönüş** MVP'de yoktur. İhtiyaç doğarsa ayrı, yalnızca Admin'e açık bir komut olarak tasarlanır.
-- **Bilgi beklemeden dönüş (OD-3, karar 2026-11-11):** `AwaitingInformation`'dan çıkış, kaydın bu duruma **hangi durumdan girdiğine** bağlıdır: `UnderReview`'dan girildiyse #11, `InProgress`'ten girildiyse #23. `ProvideInformation` ve `Resume` komutları hedef durumu istemciden almaz; giriş durumu kalıcı veriden (ör. şikâyette ayrı bir alan veya son geçmiş satırı — seçim WS-06'nın) belirlenir. `InProgress`'ten bilgi istenirken aktif atama kapatılmaz.
+- **Bilgi beklemeden dönüş (OD-3, karar 2026-11-11):** `AwaitingInformation`'dan çıkış, kaydın bu duruma **hangi durumdan girdiğine** bağlıdır: `UnderReview`'dan girildiyse #11, `InProgress`'ten girildiyse #23. `ProvideInformation` ve `Resume` komutları hedef durumu istemciden almaz; giriş durumu kalıcı veriden belirlenir (WS-06 seçimi: `complaints.awaiting_information_entry_status`). `InProgress`'ten bilgi istenirken aktif atama kapatılmaz.
 
 ### 4.4 Durum geçmişi
 

@@ -307,6 +307,7 @@ Planlanan anahtarlar (kesin adları ilgili sohbet belirler ve `.env.example`'a e
 | `WhatsApp__VerifyToken`, `WhatsApp__AppSecret`, `WhatsApp__AccessToken` | Messaging | Evet |
 | `WhatsApp__PhoneNumberId`, `WhatsApp__GraphApiVersion` | Messaging | Hayır |
 | `Seed__AdminEmail`, `Seed__AdminPassword` | Identity | Evet |
+| `Complaints__DemoSeed__Enabled` (varsayılan `false`; yalnızca `Development` ortamında etkili) | Complaints | Hayır |
 | `API_BASE_URL` (Next.js, yalnızca sunucu tarafı) | web | Hayır |
 | `SESSION_SECRET` (Next.js) | web | Evet |
 
@@ -315,6 +316,8 @@ Planlanan anahtarlar (kesin adları ilgili sohbet belirler ve `.env.example`'a e
 Platform anahtarlarının davranışı (WS-03): bağlantı dizesi kayıt sırasında değil bağlam ilk oluşturulduğunda okunur; yoksa `/health/ready` "Unhealthy" döner ve outbox dağıtıcısı çalışmaz. Build-zamanı araçlarında (`GetDocument.Insider`, `dotnet ef`) açılış migration'ı ve dağıtıcı çalışmaz. Yeni modül bağlamı: [guides/ADDING_A_MODULE_DBCONTEXT](guides/ADDING_A_MODULE_DBCONTEXT.md).
 
 Identity anahtarlarının davranışı (WS-04): `Seed__AdminEmail` ve `Seed__AdminPassword` ikisi de tanımlıysa açılışta, migration'lardan sonra, bu e-postayla kullanıcı yoksa `Admin` rolüyle bir panel kullanıcısı oluşturulur; kullanıcı varsa parola dâhil hiçbir şey değişmez. Parola Identity parola politikasına (en az 12 karakter, büyük/küçük harf, rakam, sembol) uymazsa açılış hata ile durur. Build-zamanı araçlarında tohumlama çalışmaz. Token ömürleri (erişim 15 dk, yenileme 7 gün) ve kilitleme eşikleri (5 hata → 15 dk) koddadır, yapılandırma anahtarı yoktur.
+
+Complaints anahtarlarının davranışı (WS-06): `Complaints__DemoSeed__Enabled=true` **ve** ortam `Development` ise açılışta, migration'lardan ve Admin tohumlamasından sonra Gelibolu / Yazıcızade için tamamen temsili veri yüklenir (PROJECT_BRIEF §10): 6 kategori, "(Temsili)" ekli 5 hizmet birimi, yönlendirme kuralları ve `demo-reporter-NN` sahte dış kimlikli şikâyetçilerle 5 örnek şikâyet (`[Örnek veri]` önekli açıklama, yaklaşık koordinat). İdempotenttir (sabit kod ve intake kimlikleri); üretim yapılandırmasında hiçbir şey yüklenmez. Build-zamanı araçlarında çalışmaz.
 
 ## 10. Yerel geliştirme ortamı
 

@@ -227,6 +227,8 @@ Kurallar:
 | POST / PATCH | `/api/v1/service-units[/{id}]` | Admin | Üyelik yönetimi dâhil |
 | GET / PUT | `/api/v1/routing-rules` | Admin | |
 
+> **WS-06 uygulandı** (anlık görüntü `docs/api/openapi.v1.json` esastır). Planlanandan farklar / eklemeler: komut gövdeleri `{ version, reason?, reporterNote? }` (`mark-duplicate`: `targetComplaintId`; `assign`: `serviceUnitId`, `assigneeUserId?`); komutlar güncel detayı döner. Üyelik `POST /api/v1/service-units/{id}/members` ve `DELETE /api/v1/service-units/{id}/members/{userId}` ile yönetilir. Liste filtreleri: `status` (tekrarlanabilir), `categoryId`, `serviceUnitId`, `assigneeUserId`, `submittedFrom`, `submittedTo` ([from, to), UTC), `reference`; `sort`: `createdAt` \| `submittedAt` \| `updatedAt` (`-` azalan; varsayılan `-createdAt`). Hata kodları: `complaint.not_found`, `complaint.invalid_transition`, `concurrency.conflict`, `complaint.action_forbidden` (403, ör. `Closed` yeniden açma), `complaint.duplicate_target_invalid`, `complaint.service_unit_invalid`, `complaint.assignee_not_member`, `complaint.attachment_not_found`, `category.not_found`, `category.code_taken`, `service_unit.not_found`, `service_unit.code_taken`, `service_unit.member_invalid`. Panel yanıtlarında telefon numarası **yoktur** (Identity sözleşmesi vermez); şikâyetçi görünen adıyla gösterilir.
+
 ### Messaging
 
 | Metot | Yol | Yetki | Amaç |

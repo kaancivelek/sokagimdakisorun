@@ -139,6 +139,14 @@ Başlangıç index adayları (ölçmeden daha fazlası eklenmez): `(status, crea
 - Tek webhook isteği birden çok mesaj/durum olayı taşıyabilir; kabul sırasında **olay başına bir inbox satırı** yazılır. `dedup_key` biçimi: mesaj için `msg:{provider_message_id}`, durum için `status:{provider_message_id}:{status}`.
 - JSONB yalnızca sağlayıcı payload'ı içindir; kategori, durum, konum gibi iş verisi JSON'a gömülmez.
 
+**WS-07 netleştirmeleri (migration `InitialMessaging`):**
+
+- `conversations.awaiting_reply_changed_at`: bekleyişi en son değiştiren olayın zamanı; yeniden teslim edilen eski event yeni durumu ezmez. Konuşmayı değiştiren her yazıcı satırı önce `FOR UPDATE` ile kilitler (inbox işleyicisi, event handler'ları, süre dolum süpürücüsü).
+- `messages`: gelen mesajın kimliği = inbox olayının kimliği (yeniden denemede deterministik; `ProvideInformation`/`Withdraw` idempotency anahtarı olarak kullanılır). Ek kolonlar `provider_message_type` (desteklenmeyen tür adı), `updated_at`. CHECK'ler: yön ⇔ `Received`, gelen ⇒ `provider_message_id`, giden ⇒ `dedup_key` + metin, kuyruktaki ⇒ `next_attempt_at`, koordinat çifti/aralık. Giden `dedup_key` biçimleri: `event:{eventId}`, `reply:{inboxEventId}:{n}`, `expired:{intakeSessionId}`. `Sending` iken `next_attempt_at` kira bitişidir (çökme sonrası yeniden alınır).
+- `intake_sessions`: taslak alanlar `category_id`, `category_menu uuid[]` (numara → kategori anlık görüntüsü), `description_draft`, `latitude`/`longitude` veya `address_text`, `media_file_ids uuid[]`, `return_to_confirmation`, `invalid_input_count`, `completed_at`; eşzamanlılık `xmin`. CHECK: `Submitted` ⇔ `submitted_complaint_id`; aktif ⇔ `completed_at IS NULL`.
+- `webhook_inbox_events.processing_state`: `Pending` | `Processing` | `Processed` | `DeadLetter`; `Processing` iken `next_attempt_at` kira bitişidir, `attempt_count` alma (claim) sayısıdır.
+- Intake: konuşma başına tek aktif; komutlar `iptal`/`vazgeç` (her adımda), özette `1`/`evet`/`onayla` (onay), `2`/`3`/`4` (kategori/açıklama/konum düzelt; doldurulunca özete dönülür), fotoğraf adımında `atla`. Kategori/açıklama/konum adımında 3 geçersiz cevap → `NeedsHumanHelp` (panel görünümü henüz yok). Bilgi bekleyen şikâyette `geri çek` → `Withdraw`.
+
 **Mesaj teslim durumu** (şikâyet durumundan tamamen bağımsızdır):
 
 | Yön | Değerler |

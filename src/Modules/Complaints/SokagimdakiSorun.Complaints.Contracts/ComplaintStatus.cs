@@ -1,6 +1,12 @@
+using System.Text.Json.Serialization;
+
 namespace SokagimdakiSorun.Complaints.Contracts;
 
-/// <summary>Şikâyet durumu (docs/DOMAIN_MODEL.md §4.1). Geçişler yalnızca Complaints modülünün komutlarıyla olur.</summary>
+/// <summary>
+/// Şikâyet durumu (docs/DOMAIN_MODEL.md §4.1). Geçişler yalnızca Complaints modülünün komutlarıyla olur. JSON'da (outbox
+/// event yükü dâhil) her zaman metin olarak yazılır; kalıcı yük üye sırasına bağlı değildir.
+/// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter<ComplaintStatus>))]
 public enum ComplaintStatus
 {
     /// <summary>Şikâyetçinin onayladığı, sisteme alınmış başvuru.</summary>
@@ -41,6 +47,7 @@ public enum ComplaintStatus
 }
 
 /// <summary>Konumun nasıl alındığı.</summary>
+[JsonConverter(typeof(JsonStringEnumConverter<LocationSource>))]
 public enum LocationSource
 {
     /// <summary>WhatsApp konum mesajı (koordinat).</summary>

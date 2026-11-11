@@ -77,6 +77,7 @@ internal sealed class ComplaintsDbContext(DbContextOptions<ComplaintsDbContext> 
                 t.HasCheckConstraint("ck_complaints_closed_at", "status <> 'Closed' OR closed_at IS NOT NULL");
             });
             b.HasKey(c => c.Id);
+            b.Property(c => c.Id).ValueGeneratedNever(); // kimlik domain'de atanır (Guid v7); navigasyondan eklenen yeni satır Added olur
             b.Property(c => c.PublicReference).HasMaxLength(16).IsRequired();
             b.Property(c => c.Description).HasMaxLength(IComplaintIntake.MaxDescriptionLength).IsRequired();
             b.Property(c => c.AddressText).HasMaxLength(IComplaintIntake.MaxAddressLength);
@@ -118,6 +119,7 @@ internal sealed class ComplaintsDbContext(DbContextOptions<ComplaintsDbContext> 
                     "(actor_kind = 'System') = (actor_user_id IS NULL)");
             });
             b.HasKey(h => h.Id);
+            b.Property(h => h.Id).ValueGeneratedNever(); // kimlik domain'de atanır (Guid v7); navigasyondan eklenen yeni satır Added olur
             b.Property(h => h.FromStatus).HasMaxLength(32);
             b.Property(h => h.ToStatus).HasMaxLength(32);
             b.Property(h => h.ActorKind).HasMaxLength(16);
@@ -135,6 +137,7 @@ internal sealed class ComplaintsDbContext(DbContextOptions<ComplaintsDbContext> 
                 t.HasCheckConstraint("ck_complaint_assignments_unassigned_after_assigned",
                     "unassigned_at IS NULL OR unassigned_at >= assigned_at"));
             b.HasKey(a => a.Id);
+            b.Property(a => a.Id).ValueGeneratedNever(); // kimlik domain'de atanır (Guid v7); navigasyondan eklenen yeni satır Added olur
             b.Property(a => a.Reason).HasMaxLength(ComplaintAssignment.MaxReasonLength);
             b.Property(a => a.UnassignReason).HasMaxLength(ComplaintAssignment.MaxReasonLength);
             b.Ignore(a => a.IsActive);
@@ -150,6 +153,7 @@ internal sealed class ComplaintsDbContext(DbContextOptions<ComplaintsDbContext> 
             b.ToTable("complaint_comments", t =>
                 t.HasCheckConstraint("ck_complaint_comments_body_not_blank", "length(btrim(body)) > 0"));
             b.HasKey(c => c.Id);
+            b.Property(c => c.Id).ValueGeneratedNever(); // kimlik domain'de atanır (Guid v7); navigasyondan eklenen yeni satır Added olur
             b.Property(c => c.Body).HasMaxLength(ComplaintComment.MaxBodyLength).IsRequired();
             b.Property(c => c.AuthorKind).HasMaxLength(16);
             b.Property(c => c.Visibility).HasMaxLength(16);
@@ -161,6 +165,7 @@ internal sealed class ComplaintsDbContext(DbContextOptions<ComplaintsDbContext> 
         {
             b.ToTable("complaint_attachments");
             b.HasKey(a => a.Id);
+            b.Property(a => a.Id).ValueGeneratedNever(); // kimlik domain'de atanır (Guid v7); navigasyondan eklenen yeni satır Added olur
             b.Property(a => a.Source).HasMaxLength(32);
             b.HasIndex(a => a.MediaFileId).IsUnique().HasDatabaseName(AttachmentMediaUniqueIndex);
             b.HasIndex(a => new { a.ComplaintId, a.CreatedAt }).HasDatabaseName("ix_complaint_attachments_complaint_id_created_at");
@@ -174,6 +179,7 @@ internal sealed class ComplaintsDbContext(DbContextOptions<ComplaintsDbContext> 
                 t.HasCheckConstraint("ck_complaint_categories_name_not_blank", "length(btrim(name)) > 0");
             });
             b.HasKey(c => c.Id);
+            b.Property(c => c.Id).ValueGeneratedNever(); // kimlik domain'de atanır (Guid v7); navigasyondan eklenen yeni satır Added olur
             b.Property(c => c.Code).HasMaxLength(ComplaintCategory.MaxCodeLength).IsRequired();
             b.Property(c => c.Name).HasMaxLength(ComplaintCategory.MaxNameLength).IsRequired();
             b.Property(c => c.Description).HasMaxLength(ComplaintCategory.MaxDescriptionLength);
@@ -188,6 +194,7 @@ internal sealed class ComplaintsDbContext(DbContextOptions<ComplaintsDbContext> 
                 t.HasCheckConstraint("ck_service_units_name_not_blank", "length(btrim(name)) > 0");
             });
             b.HasKey(u => u.Id);
+            b.Property(u => u.Id).ValueGeneratedNever(); // kimlik domain'de atanır (Guid v7); navigasyondan eklenen yeni satır Added olur
             b.Property(u => u.Code).HasMaxLength(ServiceUnit.MaxCodeLength).IsRequired();
             b.Property(u => u.Name).HasMaxLength(ServiceUnit.MaxNameLength).IsRequired();
             b.HasIndex(u => u.Code).IsUnique().HasDatabaseName(ServiceUnitCodeUniqueIndex);
@@ -206,6 +213,7 @@ internal sealed class ComplaintsDbContext(DbContextOptions<ComplaintsDbContext> 
         {
             b.ToTable("routing_rules");
             b.HasKey(r => r.Id);
+            b.Property(r => r.Id).ValueGeneratedNever(); // kimlik domain'de atanır (Guid v7); navigasyondan eklenen yeni satır Added olur
             b.Property(r => r.District).HasMaxLength(RoutingRule.MaxDistrictLength);
             b.HasIndex(r => new { r.CategoryId, r.ServiceUnitId }).IsUnique().HasDatabaseName("ux_routing_rules_category_service_unit");
             b.HasIndex(r => r.ServiceUnitId).HasDatabaseName("ix_routing_rules_service_unit_id");

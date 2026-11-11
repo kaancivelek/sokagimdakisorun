@@ -12,7 +12,7 @@ using SokagimdakiSorun.Complaints.Infrastructure;
 namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
 {
     [DbContext(typeof(ComplaintsDbContext))]
-    [Migration("20261111175303_InitialComplaints")]
+    [Migration("20261111180234_InitialComplaints")]
     partial class InitialComplaints
     {
         /// <inheritdoc />
@@ -29,7 +29,6 @@ namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
             modelBuilder.Entity("SokagimdakiSorun.Complaints.Domain.Complaint", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -186,7 +185,6 @@ namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
             modelBuilder.Entity("SokagimdakiSorun.Complaints.Domain.ComplaintAssignment", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -252,7 +250,6 @@ namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
             modelBuilder.Entity("SokagimdakiSorun.Complaints.Domain.ComplaintAttachment", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -297,7 +294,6 @@ namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
             modelBuilder.Entity("SokagimdakiSorun.Complaints.Domain.ComplaintCategory", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -344,7 +340,6 @@ namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
             modelBuilder.Entity("SokagimdakiSorun.Complaints.Domain.ComplaintComment", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -405,7 +400,6 @@ namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
             modelBuilder.Entity("SokagimdakiSorun.Complaints.Domain.ComplaintStatusHistoryEntry", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -486,7 +480,6 @@ namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
             modelBuilder.Entity("SokagimdakiSorun.Complaints.Domain.RoutingRule", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -527,7 +520,6 @@ namespace SokagimdakiSorun.Complaints.Infrastructure.Migrations
             modelBuilder.Entity("SokagimdakiSorun.Complaints.Domain.ServiceUnit", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 

@@ -17,7 +17,7 @@ Sıra, gerçek teknik bağımlılıklara göre belirlenmiştir. İş akışları
 | WS-03 | Veritabanı temeli | `feature/database-foundation` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-04 | Identity modülü | `feature/backend-identity` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-05 | Media modülü | `feature/backend-media` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
-| WS-06 | Complaints modülü | `feature/backend-complaints` | İncelemede (2026-11-11; remote yok, PR açıklaması hazır) |
+| WS-06 | Complaints modülü | `feature/backend-complaints` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-07 | Messaging modülü (mock sağlayıcı) | `feature/backend-messaging` | Bekliyor |
 | WS-08 | Reporting modülü | `feature/backend-reporting` | Bekliyor |
 | WS-09 | Yönetim paneli | `feature/frontend-admin` | Bekliyor |

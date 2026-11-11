@@ -16,7 +16,7 @@ Sıra, gerçek teknik bağımlılıklara göre belirlenmiştir. İş akışları
 | WS-02 | API host | `feature/backend-host` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-03 | Veritabanı temeli | `feature/database-foundation` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-04 | Identity modülü | `feature/backend-identity` | Devam ediyor (WS-05 ile paralel) |
-| WS-05 | Media modülü | `feature/backend-media` | Devam ediyor (WS-04 ile paralel) |
+| WS-05 | Media modülü | `feature/backend-media` | İncelemede (2026-11-11; `main`'e merge bekliyor) |
 | WS-06 | Complaints modülü | `feature/backend-complaints` | Bekliyor |
 | WS-07 | Messaging modülü (mock sağlayıcı) | `feature/backend-messaging` | Bekliyor |
 | WS-08 | Reporting modülü | `feature/backend-reporting` | Bekliyor |

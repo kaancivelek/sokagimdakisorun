@@ -282,6 +282,9 @@ Ayrıntı: [API_CONTRACT_STRATEGY](API_CONTRACT_STRATEGY.md).
 - Diğer modüller dosyayı opak `MediaFileId` ile tanır; `storage_key` ve fiziksel yol **Media modülünün dışına çıkmaz**.
 - Kabul kuralları: MIME allowlist (MVP: JPEG, PNG, WebP), boyut sınırı, imza (magic byte) kontrolü, SHA-256, rastgele storage key. Kullanıcının dosya adı yol olarak kullanılmaz.
 - Erişim: Complaints uç noktası şikâyet yetkisini kontrol eder, sonra Media'dan akışı alır. Herkese açık statik dosya sunumu yoktur.
+- **EXIF/GPS (WS-05 kararı): saklama anında ayıklanır.** Görüntü yeniden kodlanmaz; kapsayıcı düzeyinde izin listesiyle süzülür (JPEG: yalnızca JFIF/ICC/Adobe segmentleri ve görüntü verisi; PNG: kritik + görüntülemeyi etkileyen yardımcı chunk'lar; WebP: `EXIF`/`XMP ` chunk'ları atılır). Dosya sonundaki ek veri atılır, yapısı bozuk dosya reddedilir. SHA-256 ve boyut ayıklanmış içeriğe aittir. Ek paket kullanılmaz (`ImageMetadataStripper`). Bilinen sınır: EXIF yön etiketi de atılır; WhatsApp gönderirken fotoğrafı zaten yeniden kodladığı için kanalımızda etkisi beklenmez.
+- Doğrulama sırasında dosya bellekte tamponlanır (boyut sınırı akış okunurken sayılır, sınır aşılınca okuma durur); bu yüzden `Media__MaxFileSizeBytes` 50 MiB ile sınırlıdır.
+- Yerleşim: `<kök>/<anahtarın ilk 2 hanesi>/<32 hane rastgele hex anahtar>` (uzantısız). Yazma `CreateNew` + `File.Move(overwrite: false)` ile yapılır; üzerine yazma imkânsızdır. `OrphanMediaCleaner` süresi dolan `Temporary` kayıtları koşullu `UPDATE` ile `Deleted` yapıp dosyasını siler, etkin metadata'sı olmayan dosyaları ve yarım yazma kalıntılarını (`OrphanFileGracePeriod`'dan eskiyse) siler.
 
 Ayrıntı: [ADR-0004](decisions/ADR-0004-local-first-media-storage.md).
 
@@ -298,7 +301,8 @@ Planlanan anahtarlar (kesin adları ilgili sohbet belirler ve `.env.example`'a e
 | `ConnectionStrings__Default` | Platform | Evet |
 | `Database__ApplyMigrationsOnStartup` (varsayılan `false`; yalnızca geliştirme) | Platform | Hayır |
 | `Outbox__Enabled`, `Outbox__PollingInterval`, `Outbox__BatchSize`, `Outbox__MaxAttempts`, `Outbox__BaseRetryDelay`, `Outbox__MaxRetryDelay` (hepsinin varsayılanı var) | Platform | Hayır |
-| `Media__RootPath` | Media | Hayır |
+| `Media__RootPath` (zorunlu; yoksa `/health/ready` "Unhealthy", dosya saklanamaz) | Media | Hayır |
+| `Media__MaxFileSizeBytes` (varsayılan 10 MiB, tavan 50 MiB), `Media__TemporaryRetention` (48 saat), `Media__OrphanFileGracePeriod` (1 saat), `Media__CleanupInterval` (15 dk), `Media__CleanupBatchSize` (100), `Media__CleanupEnabled` (`true`) | Media | Hayır |
 | `WhatsApp__Provider` (`Mock` \| `CloudApi`) | Messaging | Hayır |
 | `WhatsApp__VerifyToken`, `WhatsApp__AppSecret`, `WhatsApp__AccessToken` | Messaging | Evet |
 | `WhatsApp__PhoneNumberId`, `WhatsApp__GraphApiVersion` | Messaging | Hayır |

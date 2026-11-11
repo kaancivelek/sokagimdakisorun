@@ -140,7 +140,7 @@ Başlangıç index adayları (ölçmeden daha fazlası eklenmez): `(status, crea
 
 | Tablo | MVP | Önemli alanlar / kısıtlar |
 |---|---|---|
-| `media_files` | ✔ | `storage_provider`, `storage_key` (**UNIQUE**, rastgele), `content_type`, `size_bytes` (CHECK > 0), `sha256`, `status` (`Temporary` \| `Committed` \| `Deleted`), `created_at`, `committed_at`. |
+| `media_files` | ✔ | `storage_provider`, `storage_key` (**UNIQUE**, rastgele; CHECK `^[0-9a-f]{32}$`), `content_type` (CHECK: JPEG/PNG/WebP), `size_bytes` (CHECK > 0), `sha256` (CHECK 64 hex), `status` (`Temporary` \| `Committed` \| `Deleted`), `created_at`, `committed_at`, `deleted_at`. CHECK `ck_media_files_lifecycle`: durum ile zaman damgaları tutarlı. Kısmi index `ix_media_files_temporary_created_at` (`WHERE status = 'Temporary'`). Migration: `InitialMedia` (WS-05). |
 
 Dosya önce `Temporary` olarak kaydedilir; bir şikâyete bağlandığında `Committed` olur. Belirli süre `Temporary` kalan dosyalar temizlenir (terk edilmiş intake'lerin fotoğrafları).
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using SokagimdakiSorun.Media;
 using SokagimdakiSorun.Platform;
 
 namespace SokagimdakiSorun.Api.Observability;
@@ -18,7 +19,8 @@ internal static class HealthEndpoints
     {
         services.AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), tags: [LiveTag])
-            .AddPlatformDatabaseCheck(ReadyTag);
+            .AddPlatformDatabaseCheck(ReadyTag)
+            .AddMediaStorageCheck(ReadyTag);
 
         return services;
     }

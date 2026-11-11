@@ -86,6 +86,12 @@ internal static class BotMessages
     public static string InformationReceived(string publicReference) =>
         $"Ek bilginiz {publicReference} numaralı başvurunuza eklendi. Teşekkür ederiz.";
 
+    public const string InformationMediaRejected =
+        "Fotoğraf kabul edilemedi (yalnızca JPEG, PNG veya WebP; boyut sınırı aşılmamalı). Ek bilgiyi metin veya başka bir fotoğraf olarak gönderebilirsiniz.";
+
+    public const string InformationFailed =
+        "Ek bilginiz şu anda iletilemedi. Lütfen biraz sonra yeniden gönderin.";
+
     public const string InformationNeedsContent =
         "Lütfen ek bilgiyi metin veya fotoğraf olarak gönderin.";
 

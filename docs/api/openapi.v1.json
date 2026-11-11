@@ -5,6 +5,76 @@
     "version": "v1"
   },
   "paths": {
+    "/api/v1/complaints/{id}/messages": {
+      "get": {
+        "tags": [
+          "Messaging"
+        ],
+        "summary": "Şikâyetle ilişkili WhatsApp mesajları ve teslim durumları (kapsamlı; telefon maskeli; en fazla 500, eskiden yeniye).",
+        "operationId": "ListComplaintMessages",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComplaintConversation"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [
+              "Admin",
+              "Moderator"
+            ]
+          }
+        ]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "tags": [
@@ -3294,6 +3364,120 @@
           }
         ]
       }
+    },
+    "/api/integrations/whatsapp/webhook": {
+      "get": {
+        "tags": [
+          "WhatsApp Webhook"
+        ],
+        "summary": "Meta webhook el sıkışması: hub.mode=subscribe ve hub.verify_token eşleşirse hub.challenge düz metin döner.",
+        "operationId": "VerifyWhatsAppWebhook",
+        "parameters": [
+          {
+            "name": "hub.mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hub.verify_token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hub.challenge",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "WhatsApp Webhook"
+        ],
+        "summary": "Olay alımı. X-Hub-Signature-256 (ham gövde üzerinde HMAC-SHA256) zorunlu; olay başına inbox satırı yazılır, işleme arka plandadır.",
+        "operationId": "ReceiveWhatsAppWebhook",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3694,6 +3878,32 @@
           "ReporterVisible"
         ]
       },
+      "ComplaintConversation": {
+        "required": [
+          "complaintId",
+          "maskedContact",
+          "messages"
+        ],
+        "type": "object",
+        "properties": {
+          "complaintId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "maskedContact": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversationMessageItem"
+            }
+          }
+        }
+      },
       "ComplaintDetail": {
         "required": [
           "id",
@@ -3958,6 +4168,73 @@
           "Spam",
           "Withdrawn"
         ]
+      },
+      "ConversationMessageItem": {
+        "required": [
+          "id",
+          "direction",
+          "messageType",
+          "text",
+          "latitude",
+          "longitude",
+          "hasMedia",
+          "deliveryStatus",
+          "failureReason",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "text": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "latitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "longitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "hasMedia": {
+            "type": "boolean"
+          },
+          "deliveryStatus": {
+            "type": "string"
+          },
+          "failureReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       },
       "CreateCategoryRequest": {
         "required": [
@@ -4637,6 +4914,9 @@
   },
   "tags": [
     {
+      "name": "Messaging"
+    },
+    {
       "name": "Auth"
     },
     {
@@ -4653,6 +4933,9 @@
     },
     {
       "name": "RoutingRules"
+    },
+    {
+      "name": "WhatsApp Webhook"
     }
   ]
 }

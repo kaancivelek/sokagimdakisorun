@@ -112,6 +112,8 @@ internal sealed class Message
         ComplaintId = complaintId ?? ComplaintId;
     }
 
+    public void ClearComplaint() => ComplaintId = null;
+
     /// <summary>Gönderici mesajı aldı: deneme sayılır ve kira başlar.</summary>
     public void BeginSending(DateTimeOffset leaseUntil, DateTimeOffset now)
     {

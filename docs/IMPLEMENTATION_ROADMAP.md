@@ -144,7 +144,7 @@ Aşağıdakiler ihtiyaç kanıtlanmadan yapılmaz; yapılacaksa önce bu doküma
 | OD-3 | `AwaitingInformation → InProgress` dönüşü eklensin mi | Hayır (öneri: evet) | WS-06 başlamadan |
 | OD-4 | Triage havuzu tüm moderatörlere açık | Evet | WS-06 başlamadan |
 | OD-5 | Skill dosyalarının depoya taşınması | Öneri: evet | WS-01 içinde |
-| OD-6 | Pilot bölge, gerçek kategori ve birim listesi | Temsili veri | WS-06 tohum verisi |
+| OD-6 | Pilot bölge, kategori ve birim listesi | ✅ Karar verildi (2026-11-11): mock veri, Çanakkale / Gelibolu / Yazıcızade Mahallesi ([PROJECT_BRIEF §10](PROJECT_BRIEF.md#10-pilot-bölge-od-6)) | — |
 | OD-7 | Commit'lerde kullanılacak Git e-posta adresi | Mevcut global kimlik | Depo GitHub'a itilmeden |
 
 ### İlgili sohbette doğrulanacak teknik konular

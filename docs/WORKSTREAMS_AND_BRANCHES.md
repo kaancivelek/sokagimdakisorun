@@ -217,7 +217,7 @@ Her kartta "Öneri" satırı, `project-orchestrator` skill'inin kaynak verimlili
 | Sözleşme tüketir | `Identity.Contracts`, `Media.Contracts` |
 | Sözleşme üretir | `IComplaintIntake`, `IComplaintReporterActions`, `IComplaintCatalog`, `IComplaintAccessPolicy`, `IComplaintStatistics`; event'ler `ComplaintSubmitted`, `ComplaintStatusChanged` |
 | Öneri | Güçlü model, yüksek efor (projenin çekirdeği) |
-| Başlamadan önce | OD-3, OD-4, OD-6 kararları |
+| Başlamadan önce | OD-3, OD-4 kararları (OD-6 verildi: mock veri, Gelibolu / Yazıcızade — [PROJECT_BRIEF §10](PROJECT_BRIEF.md#10-pilot-bölge-od-6)) |
 
 **Kapsam**
 

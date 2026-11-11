@@ -141,4 +141,22 @@ Proje sahibinin onayını bekleyen veya ilgili sohbette doğrulanacak konular. A
 | OD-3 | `InProgress → AwaitingInformation` sonrası dönüş `InProgress`'e yapılabilsin mi? | Şimdilik hayır (yalnızca `UnderReview`); öneri: evet |
 | OD-4 | Triage havuzu (atanmamış şikâyetler) tüm moderatörlere açık mı? | Evet |
 | OD-5 | Skill dosyaları depoya taşınsın mı? | Evet, bootstrap sohbetinde (worktree oturumları skill'i görebilsin) |
-| OD-6 | Pilot bölge ve gerçek kategori/birim verisi | Temsili veri ile başlanır |
+| OD-6 | Pilot bölge ve kategori/birim verisi | ✅ Karar verildi (2026-11-11): **mock (temsili) veri**; pilot bölge **Çanakkale / Gelibolu / Yazıcızade Mahallesi**. Ayrıntı: §10 |
+
+## 10. Pilot bölge (OD-6)
+
+| | |
+|---|---|
+| İl | Çanakkale |
+| İlçe | Gelibolu |
+| Mahalle | Yazıcızade |
+| Veri türü | Tamamen **mock (temsili)** |
+
+Kurallar:
+
+- Tohum verisindeki hizmet birimleri, kategoriler, kullanıcılar ve şikâyetler **temsilidir**. Gelibolu Belediyesi'nin gerçek organizasyon şeması, birim adları, personeli veya iletişim bilgisi olduğu iddia edilmez; gerçek telefon numarası, e-posta veya kişi adı kullanılmaz.
+- Örnek şikâyet konumları mahalle çevresinde temsili koordinatlardır; gerçek bir ev adresini veya kişiyi işaret etmez. Koordinatlar tohum verisinde yaklaşık değer olarak işaretlenir.
+- Konum doğrulaması (koordinatın gerçekten mahalle sınırı içinde olup olmadığı) MVP kapsamında yapılmaz (MapIt/geocoding MVP dışı). `district`/mahalle bilgisi şikâyette metin olarak tutulabilir.
+- Tohum verisi yalnızca geliştirme ve demo ortamında yüklenir; üretim yapılandırmasında otomatik yüklenmez.
+- Gerçek kurum verisiyle çalışılacaksa (iş birliği hâlinde) bu bölüm ve OD-6 güncellenir.
+

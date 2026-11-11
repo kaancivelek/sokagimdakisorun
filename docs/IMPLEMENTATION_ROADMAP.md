@@ -18,9 +18,9 @@ Sıra, gerçek teknik bağımlılıklara göre belirlenmiştir. İş akışları
 | WS-04 | Identity modülü | `feature/backend-identity` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-05 | Media modülü | `feature/backend-media` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-06 | Complaints modülü | `feature/backend-complaints` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
-| WS-07 | Messaging modülü (mock sağlayıcı) | `feature/backend-messaging` | İncelemede (2026-11-12; remote yok, PR açıklaması hazır) |
+| WS-07 | Messaging modülü (mock sağlayıcı) | `feature/backend-messaging` | ✅ Tamamlandı (2026-11-12, `main`'e merge edildi) |
 | WS-08 | Reporting modülü | `feature/backend-reporting` | Bekliyor |
-| WS-09 | Yönetim paneli | `feature/frontend-admin` | İncelemede (2026-11-12; dashboard ve konuşma görünümü WS-08/WS-07 uç noktalarını bekliyor — yer tutucu) |
+| WS-09 | Yönetim paneli | `feature/frontend-admin` | ✅ Tamamlandı (2026-11-12, `main`'e merge edildi); dashboard WS-08'i bekliyor (yer tutucu) |
 | WS-10 | Gerçek WhatsApp Cloud API | `feature/whatsapp-cloud-integration` | Sonraki faz |
 | WS-11 | Railway deployment | `chore/railway-deployment` | Sonraki faz |
 

@@ -1,0 +1,33 @@
+{
+  "name": "sokagimdakisorun-panel",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": ">=26.0.0 <27"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "node --conditions=react-server --test \"src/**/*.test.ts\"",
+    "gen:api": "openapi-typescript ../docs/api/openapi.v1.json -o src/api/schema.d.ts"
+  },
+  "dependencies": {
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "server-only": "0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "10.14.0",
+    "eslint-config-next": "16.4.6",
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

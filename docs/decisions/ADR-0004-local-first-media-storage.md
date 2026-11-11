@@ -56,6 +56,7 @@ Bir dosya ancak şunların tümünü geçerse saklanır:
 ### 6. Gizlilik
 
 - EXIF/GPS verisi kamuya açılmaz. Saklama anında temizleme mi, sunum anında temizleme mi yapılacağı Media iş akışında belirlenir ve belgelenir.
+  - **Karar (WS-05, 2026-11-11): saklama anında.** Konum verisi diske hiç yazılmaz; sunum yolunda ek işlem gerekmez ve unutulma riski yoktur. Görüntü yeniden kodlanmadan kapsayıcı düzeyinde izin listesiyle süzülür; yeni bir görüntü işleme paketi eklenmez. Ayrıntı ve bilinen sınır (EXIF yön etiketi): [ARCHITECTURE §8](../ARCHITECTURE.md#8-medya).
 - Dosya içeriği ve yolu loglanmaz.
 
 ### 7. Yedekleme

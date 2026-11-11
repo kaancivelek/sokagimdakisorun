@@ -10,11 +10,22 @@ namespace SokagimdakiSorun.IntegrationTests.Database;
 /// <summary>Gerçek <c>Program</c> pipeline'ını belirli veritabanı ayarlarıyla in-memory çalıştırır.</summary>
 internal static class DatabaseHostFactory
 {
+    /// <summary>
+    /// WS-05: <c>/health/ready</c> medya kökünün yazılabilirliğini de kontrol eder. Ayarlarda <c>Media:RootPath</c>
+    /// verilmemişse geçici bir dizin kullanılır (testler kalıcı bir yere yazmaz); <see langword="null"/> verilirse kök tanımsız kalır.
+    /// </summary>
+    public static readonly string DefaultMediaRoot = Path.Combine(Path.GetTempPath(), "sokagimdakisorun-tests", "readiness-media");
+
     public static WebApplicationFactory<Program> Create(IReadOnlyDictionary<string, string?> settings) =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Production");
             builder.ConfigureLogging(logging => logging.ClearProviders());
+            if (!settings.ContainsKey("Media:RootPath"))
+            {
+                builder.UseSetting("Media:RootPath", DefaultMediaRoot);
+            }
+
             foreach (var (key, value) in settings)
             {
                 builder.UseSetting(key, value);

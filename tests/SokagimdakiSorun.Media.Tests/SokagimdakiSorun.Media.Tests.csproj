@@ -4,4 +4,9 @@
     <ProjectReference Include="..\..\src\Modules\Media\SokagimdakiSorun.Media\SokagimdakiSorun.Media.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Elle kurulmuş test görüntüleri entegrasyon testleriyle paylaşılır (tek kaynak). -->
+    <Compile Include="..\SokagimdakiSorun.IntegrationTests\Media\Support\TestImages.cs" Link="Support\TestImages.cs" />
+  </ItemGroup>
+
 </Project>

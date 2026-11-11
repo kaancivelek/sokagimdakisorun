@@ -5,6 +5,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- `dotnet ef migrations` tasarım-zamanı desteği (yalnızca build; rehber §3). Yeni görüntü işleme paketi yok:
+         EXIF/GPS ayıklama kapsayıcı düzeyinde, BCL ile yapılır (ImageMetadataStripper). -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="SokagimdakiSorun.Media.Tests" />
+    <InternalsVisibleTo Include="SokagimdakiSorun.IntegrationTests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\SokagimdakiSorun.SharedKernel\SokagimdakiSorun.SharedKernel.csproj" />
     <ProjectReference Include="..\..\..\SokagimdakiSorun.Platform\SokagimdakiSorun.Platform.csproj" />
     <ProjectReference Include="..\SokagimdakiSorun.Media.Contracts\SokagimdakiSorun.Media.Contracts.csproj" />

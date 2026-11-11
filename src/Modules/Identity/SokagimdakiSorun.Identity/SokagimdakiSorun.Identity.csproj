@@ -5,6 +5,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="SokagimdakiSorun.IntegrationTests" />
+    <InternalsVisibleTo Include="SokagimdakiSorun.Identity.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\SokagimdakiSorun.SharedKernel\SokagimdakiSorun.SharedKernel.csproj" />
     <ProjectReference Include="..\..\..\SokagimdakiSorun.Platform\SokagimdakiSorun.Platform.csproj" />
     <ProjectReference Include="..\SokagimdakiSorun.Identity.Contracts\SokagimdakiSorun.Identity.Contracts.csproj" />

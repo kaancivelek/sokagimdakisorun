@@ -25,6 +25,9 @@
 
   <ItemGroup Label="Identity">
     <!-- WS-04 paketleri buraya (paralel iş akışlarında birleştirme çakışmasını önlemek için ayrı grup). -->
+    <!-- ASP.NET Core Identity'nin EF Core kullanıcı/rol deposu (ARCHITECTURE §6: parola/oturum mantığı elle yazılmaz).
+         Identity çekirdeği ve bearer token işleyicisi paylaşılan çerçevededir; yalnızca EF deposu ayrı pakettir. -->
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.15" />
   </ItemGroup>
 
   <ItemGroup Label="Media">

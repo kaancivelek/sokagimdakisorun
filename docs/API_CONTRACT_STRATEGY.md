@@ -192,10 +192,11 @@ Kurallar:
 |---|---|---|---|
 | POST | `/api/v1/auth/login` | Anonim (hız sınırlı) | E-posta + parola → erişim ve yenileme token'ı |
 | POST | `/api/v1/auth/refresh` | Anonim (yenileme token'ı ile) | Token yenileme |
-| POST | `/api/v1/auth/logout` | Kimlik doğrulanmış | Yenileme token'ını geçersiz kıl |
+| POST | `/api/v1/auth/logout` | Kimlik doğrulanmış | Kullanıcının tüm erişim ve yenileme token'larını geçersiz kıl (güvenlik damgası) |
 | GET | `/api/v1/auth/me` | Kimlik doğrulanmış | Geçerli kullanıcı, roller |
 | GET / POST | `/api/v1/users` | Admin | Panel kullanıcılarını listele / moderatör oluştur |
-| PATCH | `/api/v1/users/{id}` | Admin | Rol ve durum güncelle |
+| GET | `/api/v1/users/{id}` | Admin | Tek panel kullanıcısı (WS-04'te eklendi) |
+| PATCH | `/api/v1/users/{id}` | Admin | Rol, durum, görünen ad güncelle; rol/durum değişikliği kullanıcının oturumlarını kapatır |
 
 ### Complaints
 

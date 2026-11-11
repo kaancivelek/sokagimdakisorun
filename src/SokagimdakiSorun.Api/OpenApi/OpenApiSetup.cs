@@ -25,7 +25,9 @@ internal static class OpenApiSetup
             document.Servers = [];
 
             return Task.CompletedTask;
-        }));
+        })
+        .AddDocumentTransformer(BearerSecurityTransformers.AddSchemeAsync)
+        .AddOperationTransformer(BearerSecurityTransformers.AddRequirementAsync));
 
         return services;
     }

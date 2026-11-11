@@ -69,10 +69,10 @@ erDiagram
 
 | Tablo | MVP | Önemli alanlar / kısıtlar |
 |---|---|---|
-| `users` | ✔ | ASP.NET Core Identity kullanıcı tablosu + `user_kind` (`Staff` \| `Reporter`), `status` (`Active` \| `Suspended` \| `Anonymized`), `display_name`, `created_at`. Şikâyetçinin parola hash'i yoktur. |
+| `users` | ✔ | ASP.NET Core Identity kullanıcı tablosu + `user_kind` (`Staff` \| `Reporter`), `status` (`Active` \| `Suspended` \| `Anonymized`), `display_name`, `created_at`. Şikâyetçinin parola hash'i yoktur (CHECK `ck_users_reporter_has_no_password`). `normalized_email` UNIQUE (şikâyetçide NULL). |
 | `roles`, `user_roles` | ✔ | `Admin`, `Moderator`. Şikâyetçinin rolü yoktur. |
-| Identity'nin diğer standart tabloları | ✔ | Yalnızca çerçevenin gerektirdiği kadar; kullanılmayanlar Identity sohbetinde elenir. |
-| `external_identities` | ✔ | `user_id` FK, `provider` (`whatsapp`), `external_id` (`wa_id`), `created_at`. **UNIQUE(`provider`, `external_id`)**. |
+| Identity'nin diğer standart tabloları | ✖ | WS-04'te elendi: `user_claims`, `role_claims`, `user_logins`, `user_tokens` oluşturulmaz (özel claims fabrikası; harici giriş ve 2FA yok). `users`'ta `phone_number`, `phone_number_confirmed`, `two_factor_enabled` kolonları da yok. Roller migration ile tohumlanır. |
+| `external_identities` | ✔ | `user_id` FK, `provider` (`WhatsApp`; metin + CHECK), `external_id` (`wa_id`, en çok 64), `created_at`. **UNIQUE(`provider`, `external_id`)** (`ux_external_identities_provider_external_id`). |
 | `permissions`, `role_permissions` | ✖ | Rol + policy yeterlidir. |
 
 ### 3.2 `complaints` schema — Complaints modülü

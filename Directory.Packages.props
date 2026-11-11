@@ -34,6 +34,10 @@
     <!-- WS-05 paketleri buraya (paralel iş akışlarında birleştirme çakışmasını önlemek için ayrı grup). -->
   </ItemGroup>
 
+  <ItemGroup Label="Messaging">
+    <!-- WS-07 paketleri buraya (paralel iş akışlarında birleştirme çakışmasını önlemek için ayrı grup). -->
+  </ItemGroup>
+
   <ItemGroup Label="Test">
     <!-- xunit.v3, Microsoft.Testing.Platform üzerinde çalışır; .NET 10'da ayrı test SDK'sı/VSTest adaptörü gerekmez. -->
     <PackageVersion Include="xunit.v3" Version="4.0.3" />

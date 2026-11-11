@@ -138,8 +138,8 @@ Proje sahibinin onayını bekleyen veya ilgili sohbette doğrulanacak konular. A
 |---|---|---|
 | OD-1 | Kod kökü adı | ✅ Karar verildi (2026-11-11): `SokagimdakiSorun` |
 | OD-2 | Depo lisansı | ✅ Karar verildi (2026-11-11): GNU AGPL v3 — kök dizindeki `LICENSE` |
-| OD-3 | `InProgress → AwaitingInformation` sonrası dönüş `InProgress`'e yapılabilsin mi? | Şimdilik hayır (yalnızca `UnderReview`); öneri: evet |
-| OD-4 | Triage havuzu (atanmamış şikâyetler) tüm moderatörlere açık mı? | Evet |
+| OD-3 | `InProgress → AwaitingInformation` sonrası dönüş `InProgress`'e yapılabilsin mi? | ✅ Karar verildi (2026-11-11): **evet** — geçiş #23, [DOMAIN_MODEL §4.3](DOMAIN_MODEL.md#43-izin-verilen-geçişler-bağlayıcı-tablo) |
+| OD-4 | Triage havuzu (atanmamış şikâyetler) tüm moderatörlere açık mı? | ✅ Karar verildi (2026-11-11): **evet** — [ARCHITECTURE §6](ARCHITECTURE.md#6-kimlik-ve-yetkilendirme) |
 | OD-5 | Skill dosyaları depoya taşınsın mı? | Evet, bootstrap sohbetinde (worktree oturumları skill'i görebilsin) |
 | OD-6 | Pilot bölge ve kategori/birim verisi | ✅ Karar verildi (2026-11-11): **mock (temsili) veri**; pilot bölge **Çanakkale / Gelibolu / Yazıcızade Mahallesi**. Ayrıntı: §10 |
 

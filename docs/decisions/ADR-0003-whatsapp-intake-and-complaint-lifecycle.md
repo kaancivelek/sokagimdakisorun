@@ -38,7 +38,7 @@ Bunlar birbirine eşlenmez ve birbirinin yerine kullanılmaz. Bir bildirimin gö
 
 ### 3. Şikâyet yaşam döngüsü
 
-- 12 durum ve [DOMAIN_MODEL §4.3](../DOMAIN_MODEL.md#43-izin-verilen-geçişler-bağlayıcı-tablo)'teki 22 geçiş bağlayıcıdır.
+- 12 durum ve [DOMAIN_MODEL §4.3](../DOMAIN_MODEL.md#43-izin-verilen-geçişler-bağlayıcı-tablo)'teki 23 geçiş bağlayıcıdır.
 - Geçiş kuralları Complaints modülünün domain katmanında **tek bir politikada** yaşar. Durum yalnızca komut metotlarıyla değişir.
 - Her geçiş, aynı transaction'da `complaint_status_history`'ye aktör, kaynak, gerekçe ve zamanla yazılır. Geçmiş yalnızca eklenir.
 - `Reopened` bir durum değil, kaydı `UnderReview`'a döndüren gerekçeli bir komuttur.
@@ -101,4 +101,4 @@ Intake onaylandığında Messaging, Complaints'in `IComplaintIntake.SubmitFromIn
 - Bildirimler **en az bir kez** ve gecikmeli gider. Sağlayıcı tarafında idempotency garantisi yoksa, "gönderildi ama kaydedilemedi" durumunda çift mesaj olasılığı kalır; bu kabul edilen bir risktir ve gerçek entegrasyonda yeniden değerlendirilir.
 - Üç arka plan döngüsü (inbox, outbox, gönderim) izlenmelidir; birikim health/log üzerinden görünür olmalıdır.
 - Mock'un geçmesi gerçek Meta davranışını kanıtlamaz. Webhook payload şekli, mesaj tipleri, pencere ve şablon kuralları gerçek entegrasyonda resmî dokümandan doğrulanacaktır (yol haritası V-8).
-- `InProgress → AwaitingInformation` sonrası dönüş yolu açık karardır (OD-3).
+- `AwaitingInformation`'dan dönüş, kaydın bu duruma girdiği duruma yapılır (OD-3, 2026-11-11: geçiş #23 eklendi).

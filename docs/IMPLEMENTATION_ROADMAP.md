@@ -141,8 +141,8 @@ Aşağıdakiler ihtiyaç kanıtlanmadan yapılmaz; yapılacaksa önce bu doküma
 |---|---|---|---|
 | OD-1 | Kod kökü adı: `SokagimdakiSorun` | ✅ Karar verildi (2026-11-11) | — |
 | OD-2 | Depo lisansı | ✅ Karar verildi (2026-11-11): GNU AGPL v3 (`LICENSE`) | — |
-| OD-3 | `AwaitingInformation → InProgress` dönüşü eklensin mi | Hayır (öneri: evet) | WS-06 başlamadan |
-| OD-4 | Triage havuzu tüm moderatörlere açık | Evet | WS-06 başlamadan |
+| OD-3 | `AwaitingInformation → InProgress` dönüşü eklensin mi | ✅ Karar verildi (2026-11-11): evet (geçiş #23) | — |
+| OD-4 | Triage havuzu tüm moderatörlere açık | ✅ Karar verildi (2026-11-11): evet | — |
 | OD-5 | Skill dosyalarının depoya taşınması | Öneri: evet | WS-01 içinde |
 | OD-6 | Pilot bölge, kategori ve birim listesi | ✅ Karar verildi (2026-11-11): mock veri, Çanakkale / Gelibolu / Yazıcızade Mahallesi ([PROJECT_BRIEF §10](PROJECT_BRIEF.md#10-pilot-bölge-od-6)) | — |
 | OD-7 | Commit'lerde kullanılacak Git e-posta adresi | Mevcut global kimlik | Depo GitHub'a itilmeden |

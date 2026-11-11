@@ -214,7 +214,7 @@ Kurallar:
 | POST | `/api/v1/complaints/{id}/mark-duplicate` | Moderatör | Hedef şikâyet zorunlu |
 | POST | `/api/v1/complaints/{id}/mark-spam` | Moderatör | |
 | POST | `/api/v1/complaints/{id}/request-information` | Moderatör | Soru metni zorunlu |
-| POST | `/api/v1/complaints/{id}/resume-review` | Moderatör | |
+| POST | `/api/v1/complaints/{id}/resume` | Moderatör | `AwaitingInformation`'dan giriş durumuna (`UnderReview` veya `InProgress`) döner; hedef istemciden alınmaz |
 | POST | `/api/v1/complaints/{id}/assign` | Moderatör | Birim zorunlu; `Assigned` iken yeniden atama için de kullanılır |
 | POST | `/api/v1/complaints/{id}/unassign` | Moderatör | |
 | POST | `/api/v1/complaints/{id}/start-work` | Moderatör | |

@@ -189,7 +189,8 @@ stateDiagram-v2
   UnderReview --> Duplicate
   UnderReview --> Spam
 
-  AwaitingInformation --> UnderReview
+  AwaitingInformation --> UnderReview: incelemeden girildiyse
+  AwaitingInformation --> InProgress: çalışmadan girildiyse
   AwaitingInformation --> Withdrawn
 
   Accepted --> Assigned
@@ -229,7 +230,7 @@ Bu tabloda olmayan her geçiş **yasaktır**.
 | 8 | `UnderReview` | `Rejected` | `Reject` | Moderatör | **Zorunlu** | |
 | 9 | `UnderReview` | `Duplicate` | `MarkDuplicate` | Moderatör | **Zorunlu** | Hedef şikâyet zorunlu |
 | 10 | `UnderReview` | `Spam` | `MarkSpam` | Moderatör | **Zorunlu** | |
-| 11 | `AwaitingInformation` | `UnderReview` | `ProvideInformation` / `ResumeReview` | Şikâyetçi (WhatsApp) / Moderatör | — | |
+| 11 | `AwaitingInformation` | `UnderReview` | `ProvideInformation` / `Resume` | Şikâyetçi (WhatsApp) / Moderatör | — | Yalnızca bu duruma `UnderReview`'dan (#6) girildiyse |
 | 12 | `AwaitingInformation` | `Withdrawn` | `Withdraw` | Şikâyetçi (WhatsApp) | İsteğe bağlı | |
 | 13 | `Accepted` | `Assigned` | `Assign` | Moderatör | — | Hizmet birimi zorunlu |
 | 14 | `Accepted` | `Closed` | `Close` | Moderatör | **Zorunlu** | İşlem gerektirmeden kapatma |
@@ -241,6 +242,7 @@ Bu tabloda olmayan her geçiş **yasaktır**.
 | 20 | `Resolved` | `Closed` | `Close` | Moderatör | — | |
 | 21 | `Resolved` | `UnderReview` | `Reopen` | Moderatör | **Zorunlu** | |
 | 22 | `Closed` | `UnderReview` | `Reopen` | **Yalnızca Admin** | **Zorunlu** | |
+| 23 | `AwaitingInformation` | `InProgress` | `ProvideInformation` / `Resume` | Şikâyetçi (WhatsApp) / Moderatör | — | Yalnızca bu duruma `InProgress`'ten (#18) girildiyse; aktif atama korunur |
 
 "Moderatör" her yerde "yetki kapsamındaki moderatör veya Admin" demektir.
 
@@ -249,7 +251,7 @@ Ek kurallar:
 - **Durum değiştirmeyen atama değişikliği:** `Assigned` durumundaki bir şikâyetin birimi/kişisi değiştirilirse durum aynı kalır; eski atama kapatılır, yenisi açılır. Bu hareket `complaint_assignments`'ta izlenir, durum geçmişine satır eklenmez.
 - **Tekrar (duplicate):** hedef şikâyet kendisi olamaz; hedef de `Duplicate` durumunda olamaz (zincir/döngü engeli).
 - **Terminal durumlardan geri dönüş** MVP'de yoktur. İhtiyaç doğarsa ayrı, yalnızca Admin'e açık bir komut olarak tasarlanır.
-- **Açık karar OD-3:** `InProgress → AwaitingInformation` (#18) sonrası cevap geldiğinde kayıt #11 ile `UnderReview`'a döner ve moderatör `Accept → Assign → StartWork` adımlarını tekrarlamak zorunda kalır. Öneri: `AwaitingInformation → InProgress` geçişini "bu duruma `InProgress`'ten girildiyse" koşuluyla eklemek. Proje sahibi onaylayana kadar tablo yukarıdaki gibidir.
+- **Bilgi beklemeden dönüş (OD-3, karar 2026-11-11):** `AwaitingInformation`'dan çıkış, kaydın bu duruma **hangi durumdan girdiğine** bağlıdır: `UnderReview`'dan girildiyse #11, `InProgress`'ten girildiyse #23. `ProvideInformation` ve `Resume` komutları hedef durumu istemciden almaz; giriş durumu kalıcı veriden (ör. şikâyette ayrı bir alan veya son geçmiş satırı — seçim WS-06'nın) belirlenir. `InProgress`'ten bilgi istenirken aktif atama kapatılmaz.
 
 ### 4.4 Durum geçmişi
 
@@ -346,7 +348,7 @@ Desteklenmeyen mesaj tipi (ses, video, belge vb.) kaydedilir, kullanıcıya dest
 | I-4 | Konuşma başına tek aktif intake | Kısmi UNIQUE index |
 | I-5 | Şikâyet başına tek aktif atama | Kısmi UNIQUE index |
 | I-6 | Her durum değişikliğinin geçmiş satırı vardır | Domain komutu + tek transaction |
-| I-7 | Yasak geçiş gerçekleşemez | Domain geçiş politikası (+ birim testleri) |
+| I-7 | Yasak geçiş gerçekleşemez; `AwaitingInformation`'dan yalnızca giriş durumuna dönülür | Domain geçiş politikası (+ birim testleri) |
 | I-8 | Bir dış kimlik tek kullanıcıya bağlıdır | `external_identities` UNIQUE |
 | I-9 | Şikâyet kendisinin tekrarı olamaz | CHECK + domain kuralı |
 | I-10 | Dosya yolu Media modülü dışına çıkmaz | Sözleşme tasarımı (yalnızca `MediaFileId`) |

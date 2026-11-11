@@ -1,0 +1,39 @@
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "000000000000000",
+      "changes": [
+        {
+          "field": "messages",
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "905000000000",
+              "phone_number_id": "{{PHONE_NUMBER_ID}}"
+            },
+            "statuses": [
+              {
+                "id": "{{MESSAGE_ID}}",
+                "status": "{{STATUS}}",
+                "timestamp": "{{TIMESTAMP}}",
+                "recipient_id": "{{FROM}}",
+                "conversation": {
+                  "id": "0000",
+                  "origin": {
+                    "type": "service"
+                  }
+                },
+                "pricing": {
+                  "billable": true,
+                  "pricing_model": "CBP",
+                  "category": "service"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

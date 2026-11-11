@@ -4,4 +4,9 @@
     <ProjectReference Include="..\..\src\Modules\Messaging\SokagimdakiSorun.Messaging\SokagimdakiSorun.Messaging.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Webhook fixture yardımcısı entegrasyon testleri ve simülatörle paylaşılır (tek kaynak: tools/whatsapp-simulator/fixtures). -->
+    <Compile Include="..\SokagimdakiSorun.IntegrationTests\Messaging\Support\WebhookFixtures.cs" Link="Support\WebhookFixtures.cs" />
+  </ItemGroup>
+
 </Project>

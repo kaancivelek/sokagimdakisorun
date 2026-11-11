@@ -440,7 +440,12 @@ internal static class IntakeText
             {
                 'ç' => 'c',
                 'ğ' => 'g',
-                'ı' => 'i',
+                'ı' or 'İ' => 'i', // InvariantGlobalization: 'İ' küçük harfe çevrilmeyebilir
+                'Ç' => 'c',
+                'Ğ' => 'g',
+                'Ö' => 'o',
+                'Ş' => 's',
+                'Ü' => 'u',
                 'ö' => 'o',
                 'ş' => 's',
                 'ü' => 'u',

@@ -243,6 +243,14 @@ internal sealed class MessagingTestHost : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         await _factory.DisposeAsync();
+
+        // Her test kendi veritabanına bağlanır; boşta kalan havuz bağlantıları kapanmazsa paylaşılan konteynerin
+        // max_connections (100) sınırı aşılır (53300). Bu host'un havuzu bırakılır.
+        await using (var connection = new NpgsqlConnection(ConnectionString))
+        {
+            NpgsqlConnection.ClearPool(connection);
+        }
+
         if (Directory.Exists(_sandbox))
         {
             Directory.Delete(_sandbox, recursive: true);

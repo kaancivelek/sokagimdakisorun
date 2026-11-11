@@ -16,7 +16,9 @@ public sealed class PostgresFixture : IAsyncLifetime
     /// <summary>docker-compose.yml ile aynı ana sürüm (ADR-0005).</summary>
     public const string Image = "postgres:18";
 
-    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder(Image).Build();
+    // Her test kendi veritabanını ve host'unu açar; boşta kalan havuz bağlantıları (arka plan işleyicileri dâhil) varsayılan
+    // max_connections=100 sınırını aşabiliyor (53300 "too many clients"). WS-07'de sınır test konteyneri için yükseltildi.
+    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder(Image).WithCommand("-c", "max_connections=500").Build();
 
     public async ValueTask InitializeAsync() => await _container.StartAsync();
 

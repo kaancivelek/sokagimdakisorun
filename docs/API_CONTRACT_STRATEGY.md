@@ -239,6 +239,8 @@ Kurallar:
 
 Webhook yolu sürümsüzdür: Meta tarafındaki yapılandırmaya bağlıdır ve API sürümünden bağımsız kalmalıdır.
 
+> **WS-07 uygulandı (mock sağlayıcı).** Webhook GET: `hub.mode=subscribe` + sabit zamanlı `hub.verify_token` karşılaştırması → `hub.challenge` düz metin; aksi `403 webhook.verification_failed`. POST: ham gövde üzerinde `X-Hub-Signature-256` (HMAC-SHA256) doğrulanır, sonra ayrıştırılır; eksik/yanlış imza `401 webhook.invalid_signature` (hiçbir şey yazılmaz), biçimsiz gövde `400 webhook.invalid_payload`, `WhatsApp__MaxWebhookBodyBytes` aşımı `413 webhook.payload_too_large`; kabulde olay başına inbox satırı + boş `200`. Hız sınırı: host'un `webhook` politikası. `GET /api/v1/complaints/{id}/messages` → `{ complaintId, maskedContact, messages[] }` (`direction`, `messageType`, `text`, `latitude`, `longitude`, `hasMedia`, `deliveryStatus`, `failureReason`, `createdAt`); şikâyeti üreten intake'in konuşması + bildirimler + ek bilgi cevapları; en fazla 500, eskiden yeniye; kapsam `IComplaintAccessPolicy` ile, kapsam dışı `404 complaint.not_found`. Telefon maskeli (`90********01`); sağlayıcı kimlikleri, dosya kimliği ve ham payload yanıtta yoktur. Bildirim politikası tablosu `Messaging/Domain/NotificationPolicy.cs`'tedir (§7.2 ile birebir).
+
 ### Reporting
 
 | Metot | Yol | Yetki | Amaç |

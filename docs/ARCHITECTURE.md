@@ -319,6 +319,8 @@ Identity anahtarlarının davranışı (WS-04): `Seed__AdminEmail` ve `Seed__Adm
 
 Complaints anahtarlarının davranışı (WS-06): `Complaints__DemoSeed__Enabled=true` **ve** ortam `Development` ise açılışta, migration'lardan ve Admin tohumlamasından sonra Gelibolu / Yazıcızade için tamamen temsili veri yüklenir (PROJECT_BRIEF §10): 6 kategori, "(Temsili)" ekli 5 hizmet birimi, yönlendirme kuralları ve `demo-reporter-NN` sahte dış kimlikli şikâyetçilerle 5 örnek şikâyet (`[Örnek veri]` önekli açıklama, yaklaşık koordinat). İdempotenttir (sabit kod ve intake kimlikleri); üretim yapılandırmasında hiçbir şey yüklenmez. Build-zamanı araçlarında çalışmaz.
 
+Messaging anahtarlarının davranışı (WS-07): `WhatsApp__Provider` yalnızca `Mock` kabul eder (`CloudApi` açılışta doğrulama hatası; WS-10). `WhatsApp__AppSecret` ve `WhatsApp__VerifyToken` zorunlu değildir; tanımlı değilse webhook POST'u `401 webhook.invalid_signature`, GET doğrulaması `403` döner (build-zamanı OpenAPI üretimi secret istemez). `Messaging__*` anahtarları işleyicileri (`InboxProcessorEnabled`, `OutboundSenderEnabled`, `ExpirySweeperEnabled`, `PollingInterval` 1 sn, `BatchSize` 20, `MaxAttempts` 8, `BaseRetryDelay` 5 sn, `MaxRetryDelay` 15 dk, `LeaseDuration` 2 dk) ve intake kurallarını (`IntakeTimeout` 2 saat, `ExpirySweepInterval` 1 dk, `ServiceWindow` 24 saat, `MaxPhotosPerComplaint` 3, `MaxInvalidInputs` 3) ayarlar; hepsinin varsayılanı vardır. Build-zamanı araçlarında ve bağlantı dizesi yokken işleyiciler çalışmaz. Yerel simülasyon: `tools/whatsapp-simulator/README.md`.
+
 ## 10. Yerel geliştirme ortamı
 
 | Bileşen | Nasıl çalışır |

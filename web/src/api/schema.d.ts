@@ -589,6 +589,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/reports/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Kapsamdaki şikâyetlerin duruma göre sayıları (kapsamlı; isteğe bağlı başvuru tarihi aralığı). */
+        get: operations["GetReportSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/by-category": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Kapsamdaki şikâyetlerin kategori dağılımı (kapsamlı; isteğe bağlı başvuru tarihi aralığı). */
+        get: operations["GetReportByCategory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/timeline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Zaman içinde açılan/kapanan şikâyetler (kapsamlı). Varsayılan: bugünle biten 30 gün, günlük kova; en fazla 366 gün. */
+        get: operations["GetReportTimeline"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -654,6 +705,24 @@ export interface components {
             id: string;
             code: string;
             name: string;
+        };
+        CategoryReport: {
+            /** Format: date */
+            from: null | string;
+            /** Format: date */
+            to: null | string;
+            timeZone: string;
+            /** Format: int32 */
+            total: number | string;
+            items: components["schemas"]["CategoryReportItem"][];
+        };
+        CategoryReportItem: {
+            /** Format: uuid */
+            categoryId: string;
+            categoryCode: string;
+            categoryName: string;
+            /** Format: int32 */
+            count: number | string;
         };
         CategoryResponse: {
             /** Format: uuid */
@@ -829,6 +898,11 @@ export interface components {
         RefreshRequest: {
             refreshToken: null | string;
         };
+        ReportStatusCount: {
+            status: components["schemas"]["ComplaintStatus"];
+            /** Format: int32 */
+            count: number | string;
+        };
         RoutingRuleItem: {
             /** Format: uuid */
             categoryId: string;
@@ -874,6 +948,41 @@ export interface components {
         };
         /** Format: binary */
         Stream: string;
+        SummaryReport: {
+            /** Format: date */
+            from: null | string;
+            /** Format: date */
+            to: null | string;
+            timeZone: string;
+            /** Format: int32 */
+            total: number | string;
+            byStatus: components["schemas"]["ReportStatusCount"][];
+        };
+        /** @enum {unknown} */
+        TimelineBucket: "Day" | "Week";
+        TimelineReport: {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            bucket: components["schemas"]["TimelineBucket"];
+            timeZone: string;
+            /** Format: int32 */
+            totalOpened: number | string;
+            /** Format: int32 */
+            totalClosed: number | string;
+            points: components["schemas"]["TimelineReportPoint"][];
+        };
+        TimelineReportPoint: {
+            /** Format: date */
+            start: string;
+            /** Format: date */
+            end: string;
+            /** Format: int32 */
+            opened: number | string;
+            /** Format: int32 */
+            closed: number | string;
+        };
         UpdateCategoryRequest: {
             name: null | string;
             description: null | string;
@@ -3383,6 +3492,164 @@ export interface operations {
             };
             /** @description Too Many Requests */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetReportSummary: {
+        parameters: {
+            query?: {
+                /** @description Başvuru tarihi alt sınırı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil. */
+                from?: string;
+                /** @description Başvuru tarihi üst sınırı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil. */
+                to?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SummaryReport"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetReportByCategory: {
+        parameters: {
+            query?: {
+                /** @description Başvuru tarihi alt sınırı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil. */
+                from?: string;
+                /** @description Başvuru tarihi üst sınırı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil. */
+                to?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryReport"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetReportTimeline: {
+        parameters: {
+            query?: {
+                /** @description Aralık başlangıcı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil. Varsayılan: bitişle biten 30 gün. */
+                from?: string;
+                /** @description Aralık bitişi: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil. Varsayılan: bugün. */
+                to?: string;
+                /** @description Kova: Day (varsayılan) veya Week (pazartesi başlar; uçtaki kısmi haftalar aralığa kırpılır). */
+                bucket?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TimelineReport"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

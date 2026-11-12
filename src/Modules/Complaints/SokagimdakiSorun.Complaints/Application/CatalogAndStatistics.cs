@@ -17,7 +17,7 @@ internal sealed class ComplaintCatalog(ComplaintsDbContext db) : IComplaintCatal
 
 /// <summary>
 /// Kapsam duyarlı sayımlar (<see cref="ComplaintScopeQuery"/>). Durum ve kategori sayımları veritabanında gruplanır; zaman
-/// serisi, aralık 366 günle sınırlı olduğu için yalnızca zaman damgaları okunup bellekte UTC gününe göre gruplanır.
+/// serisi, aralık 366 günle sınırlı olduğu için yalnızca zaman damgaları okunup bellekte (UTC veya istenen zaman diliminin) yerel gününe göre gruplanır.
 /// </summary>
 internal sealed class ComplaintStatistics(ComplaintsDbContext db) : IComplaintStatistics
 {
@@ -46,8 +46,13 @@ internal sealed class ComplaintStatistics(ComplaintsDbContext db) : IComplaintSt
             .Select(x => new CategoryCount(x.CategoryId, x.Code, x.Name, x.Count))];
     }
 
-    public async Task<Result<IReadOnlyList<TimelinePoint>>> GetTimelineAsync(StaffActor actor, DateOnly from, DateOnly to, CancellationToken cancellationToken)
+    public Task<Result<IReadOnlyList<TimelinePoint>>> GetTimelineAsync(StaffActor actor, DateOnly from, DateOnly to, CancellationToken cancellationToken) =>
+        GetTimelineAsync(actor, from, to, TimeZoneInfo.Utc, cancellationToken);
+
+    public async Task<Result<IReadOnlyList<TimelinePoint>>> GetTimelineAsync(
+        StaffActor actor, DateOnly from, DateOnly to, TimeZoneInfo timeZone, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(timeZone);
         if (to < from || to.DayNumber - from.DayNumber + 1 > MaxTimelineDays)
         {
             return Error.Validation(ComplaintErrorCodes.ValidationFailed, "İstek doğrulanamadı.", new Dictionary<string, string[]>
@@ -56,15 +61,15 @@ internal sealed class ComplaintStatistics(ComplaintsDbContext db) : IComplaintSt
             });
         }
 
-        var start = new DateTimeOffset(from.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
-        var end = new DateTimeOffset(to.AddDays(1).ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+        var start = StartOfLocalDay(from, timeZone);
+        var end = StartOfLocalDay(to.AddDays(1), timeZone);
         var visible = db.Complaints.AsNoTracking().VisibleTo(db, actor);
 
         var opened = await visible.Where(c => c.SubmittedAt >= start && c.SubmittedAt < end).Select(c => c.SubmittedAt).ToListAsync(cancellationToken);
         var closed = await visible.Where(c => c.ClosedAt >= start && c.ClosedAt < end).Select(c => c.ClosedAt!.Value).ToListAsync(cancellationToken);
 
-        var openedByDay = opened.GroupBy(d => DateOnly.FromDateTime(d.UtcDateTime)).ToDictionary(g => g.Key, g => g.Count());
-        var closedByDay = closed.GroupBy(d => DateOnly.FromDateTime(d.UtcDateTime)).ToDictionary(g => g.Key, g => g.Count());
+        var openedByDay = opened.GroupBy(d => LocalDay(d, timeZone)).ToDictionary(g => g.Key, g => g.Count());
+        var closedByDay = closed.GroupBy(d => LocalDay(d, timeZone)).ToDictionary(g => g.Key, g => g.Count());
 
         var points = new List<TimelinePoint>(to.DayNumber - from.DayNumber + 1);
         for (var day = from; day <= to; day = day.AddDays(1))
@@ -74,6 +79,21 @@ internal sealed class ComplaintStatistics(ComplaintsDbContext db) : IComplaintSt
 
         return Result.Success<IReadOnlyList<TimelinePoint>>(points);
     }
+
+    /// <summary>Yerel günün ilk anı (UTC). Gece yarısı yaz saati boşluğuna düşüyorsa boşluğun bittiği an.</summary>
+    private static DateTimeOffset StartOfLocalDay(DateOnly day, TimeZoneInfo timeZone)
+    {
+        var local = day.ToDateTime(TimeOnly.MinValue, DateTimeKind.Unspecified);
+        while (timeZone.IsInvalidTime(local))
+        {
+            local = local.AddMinutes(30);
+        }
+
+        return new DateTimeOffset(TimeZoneInfo.ConvertTimeToUtc(local, timeZone), TimeSpan.Zero);
+    }
+
+    private static DateOnly LocalDay(DateTimeOffset instant, TimeZoneInfo timeZone) =>
+        DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(instant, timeZone).DateTime);
 
     private IQueryable<Domain.Complaint> Filtered(StaffActor actor, ComplaintStatisticsFilter filter)
     {

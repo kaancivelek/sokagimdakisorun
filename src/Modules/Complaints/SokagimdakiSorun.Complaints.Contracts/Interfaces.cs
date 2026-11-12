@@ -146,7 +146,7 @@ public sealed record StatusCount(ComplaintStatus Status, int Count);
 /// <summary>Kategoriye göre sayım.</summary>
 public sealed record CategoryCount(Guid CategoryId, string CategoryCode, string CategoryName, int Count);
 
-/// <summary>Bir UTC gününde açılan (submitted) ve kapanan (closed) şikâyet sayısı.</summary>
+/// <summary>Bir günde (UTC veya istenen zaman diliminin yerel günü) açılan (submitted) ve kapanan (closed) şikâyet sayısı.</summary>
 public sealed record TimelinePoint(DateOnly Date, int Opened, int Closed);
 
 /// <summary>Kapsam duyarlı sayım sorguları: aktör yalnızca görebildiği şikâyetleri sayar.</summary>
@@ -163,4 +163,13 @@ public interface IComplaintStatistics
     /// kapanan sayısı; boş günler 0 ile döner. Aralık en fazla 366 gün olabilir.
     /// </summary>
     Task<Result<IReadOnlyList<TimelinePoint>>> GetTimelineAsync(StaffActor actor, DateOnly from, DateOnly to, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// <see cref="GetTimelineAsync(StaffActor, DateOnly, DateOnly, CancellationToken)"/> ile aynı, ancak günler
+    /// <paramref name="timeZone"/>'un yerel gün sınırlarına göre belirlenir (ör. <c>Europe/Istanbul</c>; panel tarihleri
+    /// yerel gündür). [<paramref name="from"/>, <paramref name="to"/>] yerel günleri iki uç dâhil; en fazla 366 gün.
+    /// UTC ile çağrıldığında UTC'li sürümle aynı sonucu verir.
+    /// </summary>
+    Task<Result<IReadOnlyList<TimelinePoint>>> GetTimelineAsync(
+        StaffActor actor, DateOnly from, DateOnly to, TimeZoneInfo timeZone, CancellationToken cancellationToken);
 }

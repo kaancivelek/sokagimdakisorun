@@ -3478,6 +3478,245 @@
           }
         }
       }
+    },
+    "/api/v1/reports/summary": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Kapsamdaki şikâyetlerin duruma göre sayıları (kapsamlı; isteğe bağlı başvuru tarihi aralığı).",
+        "operationId": "GetReportSummary",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Başvuru tarihi alt sınırı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Başvuru tarihi üst sınırı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryReport"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [
+              "Admin",
+              "Moderator"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/reports/by-category": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Kapsamdaki şikâyetlerin kategori dağılımı (kapsamlı; isteğe bağlı başvuru tarihi aralığı).",
+        "operationId": "GetReportByCategory",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Başvuru tarihi alt sınırı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Başvuru tarihi üst sınırı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryReport"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [
+              "Admin",
+              "Moderator"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/reports/timeline": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Zaman içinde açılan/kapanan şikâyetler (kapsamlı). Varsayılan: bugünle biten 30 gün, günlük kova; en fazla 366 gün.",
+        "operationId": "GetReportTimeline",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Aralık başlangıcı: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil. Varsayılan: bitişle biten 30 gün.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Aralık bitişi: Europe/Istanbul yerel günü (yyyy-MM-dd), dâhil. Varsayılan: bugün.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bucket",
+            "in": "query",
+            "description": "Kova: Day (varsayılan) veya Week (pazartesi başlar; uçtaki kısmi haftalar aralığa kırpılır).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimelineReport"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [
+              "Admin",
+              "Moderator"
+            ]
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -3745,6 +3984,78 @@
           },
           "name": {
             "type": "string"
+          }
+        }
+      },
+      "CategoryReport": {
+        "required": [
+          "from",
+          "to",
+          "timeZone",
+          "total",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "to": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryReportItem"
+            }
+          }
+        }
+      },
+      "CategoryReportItem": {
+        "required": [
+          "categoryId",
+          "categoryCode",
+          "categoryName",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryCode": {
+            "type": "string"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           }
         }
       },
@@ -4528,6 +4839,26 @@
           }
         }
       },
+      "ReportStatusCount": {
+        "required": [
+          "status",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ComplaintStatus"
+          },
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "RoutingRuleItem": {
         "required": [
           "categoryId",
@@ -4703,6 +5034,140 @@
       "Stream": {
         "type": "string",
         "format": "binary"
+      },
+      "SummaryReport": {
+        "required": [
+          "from",
+          "to",
+          "timeZone",
+          "total",
+          "byStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "to": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "byStatus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportStatusCount"
+            }
+          }
+        }
+      },
+      "TimelineBucket": {
+        "enum": [
+          "Day",
+          "Week"
+        ]
+      },
+      "TimelineReport": {
+        "required": [
+          "from",
+          "to",
+          "bucket",
+          "timeZone",
+          "totalOpened",
+          "totalClosed",
+          "points"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          },
+          "bucket": {
+            "$ref": "#/components/schemas/TimelineBucket"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "totalOpened": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "totalClosed": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimelineReportPoint"
+            }
+          }
+        }
+      },
+      "TimelineReportPoint": {
+        "required": [
+          "start",
+          "end",
+          "opened",
+          "closed"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date"
+          },
+          "end": {
+            "type": "string",
+            "format": "date"
+          },
+          "opened": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "closed": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
       },
       "UpdateCategoryRequest": {
         "required": [
@@ -4936,6 +5401,9 @@
     },
     {
       "name": "WhatsApp Webhook"
+    },
+    {
+      "name": "Reports"
     }
   ]
 }

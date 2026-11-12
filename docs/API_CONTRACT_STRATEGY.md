@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Doküman durumu | Kabul edildi (mimari hazırlık oturumu) |
-| Son güncelleme | 2026-11-11 |
+| Son güncelleme | 2026-11-12 |
 | Bağlayıcılık | §1–§6 kuralları bağlayıcıdır. §7–§8'deki listeler **planlanan** yüzeydir; hiçbiri henüz uygulanmadı. |
 
 Bu doküman iki tür sözleşmeyi yönetir:
@@ -150,6 +150,8 @@ Hata kodları kataloğu her modülün kendi sohbetinde genişletilir ve OpenAPI 
 | Complaints | `IComplaintAccessPolicy` | Messaging, Reporting | "Bu kullanıcı bu şikâyeti görebilir mi?" ve kapsam filtresi |
 | Complaints | `IComplaintStatistics` | Reporting | Kapsam duyarlı sayım ve dağılım sorguları |
 
+> **WS-08 eklemesi (geriye uyumlu):** `IComplaintStatistics.GetTimelineAsync(actor, from, to, TimeZoneInfo timeZone, ct)` aşırı yüklemesi; günleri verilen zaman diliminin yerel gün sınırına göre kovalar (Reporting `Europe/Istanbul` geçer). Mevcut UTC'li imza değişmedi ve yeni yüklemeye `TimeZoneInfo.Utc` ile delege eder.
+
 Kurallar:
 
 - Arayüzler DTO alır ve döner; entity veya `IQueryable` sızdırmaz.
@@ -248,6 +250,8 @@ Webhook yolu sürümsüzdür: Meta tarafındaki yapılandırmaya bağlıdır ve 
 | GET | `/api/v1/reports/summary` | Moderatör (kapsamlı) | Duruma göre sayılar |
 | GET | `/api/v1/reports/by-category` | Moderatör (kapsamlı) | Kategori dağılımı |
 | GET | `/api/v1/reports/timeline` | Moderatör (kapsamlı) | Zaman içinde açılan/kapanan |
+
+> **WS-08 uygulandı** (anlık görüntü `docs/api/openapi.v1.json` esastır). Üçü de `Bearer` (Admin, Moderator) ister; sayılar `IComplaintStatistics` üzerinden kapsam duyarlıdır (moderatör: atanmamışlar + üyesi olduğu birimlere atananlar; Admin: hepsi). Tarihler `Europe/Istanbul` **yerel günü** (`yyyy-MM-dd`, iki uç dâhil, 2000-01-01…2099-12-31). `summary` ve `by-category`: isteğe bağlı `from`, `to` (başvuru tarihi); yanıtlar `{ from, to, timeZone, total, byStatus[{status, count}] }` (12 durumun hepsi, 0 dâhil) ve `{ from, to, timeZone, total, items[{categoryId, categoryCode, categoryName, count}] }` (sayıya göre azalan). `timeline`: `from` (varsayılan: bitişle biten 30 gün), `to` (varsayılan: bugün), `bucket` = `Day` (varsayılan) \| `Week` (büyük/küçük harf duyarsız; hafta pazartesi başlar, uçtaki kısmi haftalar aralığa kırpılır); aralık en fazla 366 gün; yanıt `{ from, to, bucket, timeZone, totalOpened, totalClosed, points[{start, end, opened, closed}] }` — açılan `submitted_at`, kapanan `closed_at` gününe göre; boş kovalar 0. Bilinmeyen sorgu parametresi, hatalı tarih, ters veya aşırı geniş aralık, bilinmeyen kova → `400 validation.failed` (`errors` alan bazında). Boş veri hata değildir (sıfırlar / boş liste).
 
 ### Host
 

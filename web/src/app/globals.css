@@ -292,3 +292,200 @@ dl.props dd {
   align-items: center;
   margin-top: 0.75rem;
 }
+
+/* --- Özet (Reporting) --- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.small {
+  font-size: 0.8rem;
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.kpi {
+  margin: 0 0 0.75rem;
+}
+
+.kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-right: 0.25rem;
+}
+
+.bar-list th {
+  color: var(--text);
+  font-weight: 400;
+  font-size: 0.9rem;
+  width: 40%;
+  white-space: nowrap;
+}
+
+.bar-list td,
+.bar-list th {
+  padding: 0.3rem 0.5rem;
+  vertical-align: middle;
+}
+
+.bar-cell {
+  width: 50%;
+}
+
+.bar {
+  display: block;
+  height: 0.75rem;
+  min-width: 0;
+  background: var(--primary);
+  border-radius: 3px;
+}
+
+.timeline-legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 2px;
+  vertical-align: -1px;
+}
+
+.swatch.opened,
+.tbar.opened {
+  background: var(--primary);
+}
+
+.swatch.closed,
+.tbar.closed {
+  background: #2e8b57;
+}
+
+.timeline {
+  display: flex;
+  gap: 2px;
+  align-items: stretch;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.timeline-col {
+  flex: 1 0 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-bars {
+  height: 160px;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tbar {
+  width: 45%;
+  max-width: 14px;
+  border-radius: 2px 2px 0 0;
+}
+
+.timeline-label {
+  font-size: 0.65rem;
+  color: var(--muted);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  margin-top: 0.25rem;
+  white-space: nowrap;
+}
+
+.timeline-table {
+  margin-top: 0.75rem;
+}
+
+.timeline-table summary {
+  cursor: pointer;
+  color: var(--primary);
+}
+
+.field-errors {
+  margin: 0.25rem 0 0;
+  padding-left: 1.2rem;
+}
+
+/* --- WhatsApp konuşması --- */
+.chat {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-msg {
+  max-width: 85%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+}
+
+.chat-msg.inbound {
+  align-self: flex-start;
+  background: #fff;
+}
+
+.chat-msg.outbound {
+  align-self: flex-end;
+  background: #eaf3ec;
+}
+
+.chat-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.chat-text {
+  margin: 0.25rem 0 0;
+}
+
+.chat-status {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.delivery.ok {
+  color: #2e7d32;
+}
+
+.delivery.pending {
+  color: #8a6d00;
+}
+
+.delivery.error {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.delivery.neutral {
+  color: var(--muted);
+}

@@ -19,7 +19,7 @@ Sıra, gerçek teknik bağımlılıklara göre belirlenmiştir. İş akışları
 | WS-05 | Media modülü | `feature/backend-media` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-06 | Complaints modülü | `feature/backend-complaints` | ✅ Tamamlandı (2026-11-11, `main`'e merge edildi) |
 | WS-07 | Messaging modülü (mock sağlayıcı) | `feature/backend-messaging` | ✅ Tamamlandı (2026-11-12, `main`'e merge edildi) |
-| WS-08 | Reporting modülü | `feature/backend-reporting` | 🔍 İncelemede (2026-11-12; branch hazır, `main`'e merge edilmedi) |
+| WS-08 | Reporting modülü | `feature/backend-reporting` | ✅ Tamamlandı (2026-11-13, `main`'e merge edildi) |
 | WS-09 | Yönetim paneli | `feature/frontend-admin` | ✅ Tamamlandı (2026-11-12, `main`'e merge edildi); dashboard WS-08'i bekliyor (yer tutucu) |
 | WS-10 | Gerçek WhatsApp Cloud API | `feature/whatsapp-cloud-integration` | Sonraki faz |
 | WS-11 | Railway deployment | `chore/railway-deployment` | Sonraki faz |

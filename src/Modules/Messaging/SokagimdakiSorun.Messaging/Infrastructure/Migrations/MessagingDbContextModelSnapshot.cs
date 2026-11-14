@@ -222,6 +222,11 @@ namespace SokagimdakiSorun.Messaging.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("complaint_id");
 
+                    b.Property<string>("ComplaintReference")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("complaint_reference");
+
                     b.Property<Guid>("ConversationId")
                         .HasColumnType("uuid")
                         .HasColumnName("conversation_id");

@@ -147,6 +147,8 @@ Başlangıç index adayları (ölçmeden daha fazlası eklenmez): `(status, crea
 - `webhook_inbox_events.processing_state`: `Pending` | `Processing` | `Processed` | `DeadLetter`; `Processing` iken `next_attempt_at` kira bitişidir, `attempt_count` alma (claim) sayısıdır.
 - Intake: konuşma başına tek aktif; komutlar `iptal`/`vazgeç` (her adımda), özette `1`/`evet`/`onayla` (onay), `2`/`3`/`4` (kategori/açıklama/konum düzelt; doldurulunca özete dönülür), fotoğraf adımında `atla`. Kategori/açıklama/konum adımında 3 geçersiz cevap → `NeedsHumanHelp` (panel görünümü henüz yok). Bilgi bekleyen şikâyette `geri çek` → `Withdraw`.
 
+**WS-10 netleştirmeleri (migration `AddOutboundComplaintReference`):** `messages.complaint_reference varchar(32) NULL` — yalnızca şikâyet bildirimlerinde (`event:` dedup) şikâyetin herkese açık referansı; pencere kapalıyken onaylı şablonun tek parametresidir. Şablonla gönderilen giden mesajda `provider_message_type = 'template'` olur (`text_body` panelde bilgi amaçlı kalır; şikâyetçiye şablon metni gitmiştir). Geri alma: kolonun düşürülmesi (veri kaybı yalnızca bu referanslardır).
+
 **Mesaj teslim durumu** (şikâyet durumundan tamamen bağımsızdır):
 
 | Yön | Değerler |

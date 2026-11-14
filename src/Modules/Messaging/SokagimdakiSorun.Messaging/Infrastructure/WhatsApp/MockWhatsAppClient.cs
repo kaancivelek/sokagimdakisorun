@@ -19,6 +19,8 @@ internal sealed partial class MockWhatsAppClient(ILogger<MockWhatsAppClient> log
     private readonly ConcurrentQueue<SendResult> _scriptedSends = new();
     private readonly ConcurrentDictionary<string, (byte[] Content, string ContentType)> _media = new(StringComparer.Ordinal);
     private readonly ConcurrentQueue<OutboundText> _sent = new();
+    private readonly ConcurrentQueue<OutboundTemplate> _sentTemplates = new();
+    private readonly ConcurrentQueue<OutboundLocation> _sentLocations = new();
 
     /// <summary>Başarıyla "gönderilen" mesajlar (yalnızca testler ve yerel tanı için).</summary>
     public IReadOnlyCollection<OutboundText> Sent => _sent;
@@ -35,9 +37,32 @@ internal sealed partial class MockWhatsAppClient(ILogger<MockWhatsAppClient> log
     /// <summary>Bir medya kimliği için indirilecek içeriği kaydeder.</summary>
     public void RegisterMedia(string mediaId, byte[] content, string contentType) => _media[mediaId] = (content, contentType);
 
+    /// <summary>Başarıyla "gönderilen" şablonlar (yalnızca testler ve yerel tanı için).</summary>
+    public IReadOnlyCollection<OutboundTemplate> SentTemplates => _sentTemplates;
+
+    /// <summary>Başarıyla "gönderilen" konumlar.</summary>
+    public IReadOnlyCollection<OutboundLocation> SentLocations => _sentLocations;
+
     public Task<SendResult> SendTextAsync(OutboundText message, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message);
+        return SendAsync(message, _sent, message.MessageId, cancellationToken);
+    }
+
+    public Task<SendResult> SendLocationAsync(OutboundLocation message, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        return SendAsync(message, _sentLocations, message.MessageId, cancellationToken);
+    }
+
+    public Task<SendResult> SendTemplateAsync(OutboundTemplate message, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        return SendAsync(message, _sentTemplates, message.MessageId, cancellationToken);
+    }
+
+    private Task<SendResult> SendAsync<T>(T message, ConcurrentQueue<T> sink, Guid messageId, CancellationToken cancellationToken)
+    {
         cancellationToken.ThrowIfCancellationRequested();
 
         var result = _scriptedSends.TryDequeue(out var scripted)
@@ -46,11 +71,11 @@ internal sealed partial class MockWhatsAppClient(ILogger<MockWhatsAppClient> log
 
         if (result.Outcome == SendOutcome.Sent)
         {
-            _sent.Enqueue(message);
+            sink.Enqueue(message);
         }
 
         // Yalnızca kendi mesaj kimliğimiz ve sonuç; alıcı ve metin loglanmaz.
-        LogSend(logger, message.MessageId, result.Outcome);
+        LogSend(logger, messageId, result.Outcome);
         return Task.FromResult(result);
     }
 

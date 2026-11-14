@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using SokagimdakiSorun.Complaints.Contracts;
 using SokagimdakiSorun.Messaging.Application;
 using SokagimdakiSorun.Messaging.Endpoints;
@@ -18,7 +19,7 @@ namespace SokagimdakiSorun.Messaging;
 public static class MessagingModule
 {
     /// <summary>
-    /// Messaging modülünün DI kayıtlarını ekler: <c>messaging</c> bağlamı, <c>IWhatsAppClient</c> (yalnızca <c>Mock</c>), webhook kabulü,
+    /// Messaging modülünün DI kayıtlarını ekler: <c>messaging</c> bağlamı, <c>IWhatsAppClient</c> (<c>Mock</c> veya <c>CloudApi</c>), webhook kabulü,
     /// inbox işleyicisi, giden gönderici, intake süre dolum süpürücüsü ve <see cref="ComplaintSubmitted"/> /
     /// <see cref="ComplaintStatusChanged"/> handler'ları. Kayıt sırasında veritabanına bağlanılmaz; secret zorunlu değildir
     /// (tanımlı değilse webhook istekleri reddedilir).
@@ -40,9 +41,15 @@ public static class MessagingModule
 
         services.AddModuleDbContext<MessagingDbContext>();
 
-        // Sağlayıcı: WS-07'de yalnızca Mock (CloudApi seçimi açılışta doğrulama hatası verir; WS-10).
+        // Sağlayıcı (ADR-0003 §6): WhatsApp__Provider. CloudApi'de eksik secret/sürüm açılışta doğrulama hatasıdır (Mock'a düşülmez).
+        // Yerleşik HttpClient logları tam URL yazar (medya URL'si, numara kimliği) → kapatılır (ARCHITECTURE §11).
         services.AddSingleton<MockWhatsAppClient>();
-        services.AddSingleton<IWhatsAppClient>(provider => provider.GetRequiredService<MockWhatsAppClient>());
+        services.AddHttpClient(CloudWhatsAppClient.HttpClientName).RemoveAllLoggers();
+        services.AddSingleton<CloudWhatsAppClient>();
+        services.AddSingleton<IWhatsAppClient>(provider =>
+            provider.GetRequiredService<IOptions<WhatsAppOptions>>().Value.Provider == WhatsAppProvider.CloudApi
+                ? provider.GetRequiredService<CloudWhatsAppClient>()
+                : provider.GetRequiredService<MockWhatsAppClient>());
 
         services.AddScoped<WebhookIngestion>();
         services.AddScoped<InboundEventProcessor>();

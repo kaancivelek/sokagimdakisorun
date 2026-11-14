@@ -18,15 +18,10 @@
                 "status": "{{STATUS}}",
                 "timestamp": "{{TIMESTAMP}}",
                 "recipient_id": "{{FROM}}",
-                "conversation": {
-                  "id": "0000",
-                  "origin": {
-                    "type": "service"
-                  }
-                },
                 "pricing": {
                   "billable": true,
-                  "pricing_model": "CBP",
+                  "pricing_model": "PMP",
+                  "type": "regular",
                   "category": "service"
                 }
               }

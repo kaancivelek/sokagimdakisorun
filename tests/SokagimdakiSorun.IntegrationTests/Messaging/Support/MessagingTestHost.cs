@@ -54,7 +54,8 @@ internal sealed class MessagingTestHost : IAsyncDisposable
     public static CancellationToken Ct => TestContext.Current.CancellationToken;
 
     public static async Task<MessagingTestHost> StartAsync(
-        PostgresFixture postgres, IReadOnlyDictionary<string, string?>? settings = null, bool withCategory = true)
+        PostgresFixture postgres, IReadOnlyDictionary<string, string?>? settings = null, bool withCategory = true,
+        FakeGraphHandler? graph = null)
     {
         var connectionString = await postgres.CreateDatabaseAsync();
         var sandbox = Path.Combine(Path.GetTempPath(), "sokagimdakisorun-tests", Guid.CreateVersion7().ToString("N"));
@@ -81,7 +82,15 @@ internal sealed class MessagingTestHost : IAsyncDisposable
                 builder.UseSetting(key, value);
             }
 
-            builder.ConfigureTestServices(services => services.AddSingleton<TimeProvider>(clock));
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddSingleton<TimeProvider>(clock);
+                if (graph is not null)
+                {
+                    // Cloud API istemcisinin HTTP katmanı sahte handler'a bağlanır: gerçek Graph API'ye istek atılmaz.
+                    services.AddHttpClient(CloudWhatsAppClient.HttpClientName).ConfigurePrimaryHttpMessageHandler(() => graph);
+                }
+            });
             builder.ConfigureLogging(logging =>
             {
                 logging.ClearProviders();
@@ -91,7 +100,17 @@ internal sealed class MessagingTestHost : IAsyncDisposable
             });
         });
 
-        _ = factory.Server; // açılış: migration + Admin tohumlama
+        try
+        {
+            _ = factory.Server; // açılış: migration + Admin tohumlama
+        }
+        catch
+        {
+            // Açılış doğrulaması (ör. CloudApi'de eksik secret) testleri: başarısız host'un kaynakları bırakılır.
+            await factory.DisposeAsync();
+            throw;
+        }
+
         var host = new MessagingTestHost(factory, connectionString, sandbox, clock, logs);
         if (withCategory)
         {
@@ -164,6 +183,27 @@ internal sealed class MessagingTestHost : IAsyncDisposable
         }
 
         return total;
+    }
+
+    /// <summary>
+    /// <c>WhatsApp__Provider=CloudApi</c> + sahte secret'lar + <paramref name="graph"/> (sahte Graph API). Değerler gerçek değildir.
+    /// </summary>
+    public static Task<MessagingTestHost> StartCloudAsync(
+        PostgresFixture postgres, FakeGraphHandler graph, IReadOnlyDictionary<string, string?>? settings = null)
+    {
+        var all = new Dictionary<string, string?>
+        {
+            ["WhatsApp:Provider"] = "CloudApi",
+            ["WhatsApp:AccessToken"] = FakeGraphHandler.AccessToken,
+            ["WhatsApp:PhoneNumberId"] = WebhookFixtures.PhoneNumberId,
+            ["WhatsApp:GraphApiVersion"] = FakeGraphHandler.GraphVersion,
+        };
+        foreach (var (key, value) in settings ?? new Dictionary<string, string?>())
+        {
+            all[key] = value;
+        }
+
+        return StartAsync(postgres, all, graph: graph);
     }
 
     public Task<int> SendOutboundAsync() => Services.GetRequiredService<OutboundSender>().RunOnceAsync(Ct);

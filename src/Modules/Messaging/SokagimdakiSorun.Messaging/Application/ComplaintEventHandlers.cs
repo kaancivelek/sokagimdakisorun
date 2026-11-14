@@ -17,7 +17,7 @@ internal sealed class ComplaintSubmittedHandler(ComplaintNotifier notifier) : II
     {
         ArgumentNullException.ThrowIfNull(integrationEvent);
         return notifier.NotifyAsync(
-            integrationEvent.EventId, integrationEvent.ReporterUserId, integrationEvent.ComplaintId,
+            integrationEvent.EventId, integrationEvent.ReporterUserId, integrationEvent.ComplaintId, integrationEvent.PublicReference,
             NotificationPolicy.ForSubmitted(integrationEvent.PublicReference), linkIntake: true, conversation: null, cancellationToken);
     }
 }
@@ -36,7 +36,8 @@ internal sealed class ComplaintStatusChangedHandler(ComplaintNotifier notifier) 
             integrationEvent.FromStatus, integrationEvent.ToStatus, integrationEvent.PublicReference, integrationEvent.ReporterNote);
 
         return notifier.NotifyAsync(
-            integrationEvent.EventId, integrationEvent.ReporterUserId, integrationEvent.ComplaintId, text, linkIntake: false,
+            integrationEvent.EventId, integrationEvent.ReporterUserId, integrationEvent.ComplaintId, integrationEvent.PublicReference, text,
+            linkIntake: false,
             conversation: (c, now) =>
             {
                 if (integrationEvent.ToStatus == ComplaintStatus.AwaitingInformation)
@@ -52,11 +53,14 @@ internal sealed class ComplaintStatusChangedHandler(ComplaintNotifier notifier) 
     }
 }
 
-/// <summary>Şikâyetçinin konuşmasını bulur, kilitler, isteğe bağlı bağlamı günceller ve bildirimi kuyruğa yazar.</summary>
+/// <summary>
+/// Şikâyetçinin konuşmasını bulur, kilitler, isteğe bağlı bağlamı günceller ve bildirimi kuyruğa yazar. Referans mesajda saklanır:
+/// gönderim anında pencere kapalıysa onaylı şablonun parametresi olur (WS-10).
+/// </summary>
 internal sealed partial class ComplaintNotifier(MessagingDbContext db, TimeProvider timeProvider, ILogger<ComplaintNotifier> logger)
 {
     public async Task NotifyAsync(
-        Guid eventId, Guid reporterUserId, Guid complaintId, string? text, bool linkIntake,
+        Guid eventId, Guid reporterUserId, Guid complaintId, string publicReference, string? text, bool linkIntake,
         Action<Conversation, DateTimeOffset>? conversation, CancellationToken cancellationToken)
     {
         var dedupKey = $"event:{eventId}";
@@ -92,7 +96,7 @@ internal sealed partial class ComplaintNotifier(MessagingDbContext db, TimeProvi
                     ? await db.IntakeSessions.Where(s => s.SubmittedComplaintId == complaintId).Select(s => (Guid?)s.Id)
                         .FirstOrDefaultAsync(cancellationToken)
                     : null;
-                db.Messages.Add(Message.Outbound(locked.Id, text, dedupKey, intakeSessionId, complaintId, now));
+                db.Messages.Add(Message.Outbound(locked.Id, text, dedupKey, intakeSessionId, complaintId, now, publicReference));
             }
 
             try

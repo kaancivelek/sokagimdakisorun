@@ -7,6 +7,8 @@
   <ItemGroup>
     <!-- Webhook fixture yardımcısı entegrasyon testleri ve simülatörle paylaşılır (tek kaynak: tools/whatsapp-simulator/fixtures). -->
     <Compile Include="..\SokagimdakiSorun.IntegrationTests\Messaging\Support\WebhookFixtures.cs" Link="Support\WebhookFixtures.cs" />
+    <!-- Sahte Graph API handler'ı (WS-10): gerçek Meta'ya istek atılmaz. -->
+    <Compile Include="..\SokagimdakiSorun.IntegrationTests\Messaging\Support\FakeGraphHandler.cs" Link="Support\FakeGraphHandler.cs" />
   </ItemGroup>
 
 </Project>

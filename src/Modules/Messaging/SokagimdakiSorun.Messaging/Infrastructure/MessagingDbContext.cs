@@ -87,6 +87,7 @@ internal sealed class MessagingDbContext(DbContextOptions<MessagingDbContext> op
             b.Property(m => m.TextBody).HasMaxLength(Message.TextMaxLength);
             b.Property(m => m.DedupKey).HasMaxLength(Message.DedupKeyMaxLength);
             b.Property(m => m.LastError).HasMaxLength(Message.LastErrorMaxLength);
+            b.Property(m => m.ComplaintReference).HasMaxLength(Message.ComplaintReferenceMaxLength);
 
             b.HasIndex(m => m.ProviderMessageId).IsUnique()
                 .HasFilter("provider_message_id IS NOT NULL").HasDatabaseName(ProviderMessageUniqueIndex);

@@ -43,9 +43,13 @@ internal static class WebhookFixtures
     public static string Status(string providerMessageId, string status, string from = "905550000001") =>
         Build("status", from, providerMessageId, status: status);
 
+    /// <summary>Resmî dokümandaki <c>failed</c> durum şekli (<c>errors[].code</c>).</summary>
+    public static string StatusFailed(string providerMessageId, int errorCode, string from = "905550000001") =>
+        Build("status-failed", from, providerMessageId, errorCode: errorCode);
+
     public static string Build(
         string type, string from, string messageId, string text = "", double latitude = 0, double longitude = 0,
-        string mediaId = "", string status = "delivered", string name = "Temsili Vatandaş", long? timestamp = null)
+        string mediaId = "", string status = "delivered", string name = "Temsili Vatandaş", long? timestamp = null, int errorCode = 0)
     {
         var template = File.ReadAllText(Path.Combine(FixtureDirectory.Value, $"{type}.json"));
         return template
@@ -58,6 +62,7 @@ internal static class WebhookFixtures
             .Replace("{{LATITUDE}}", latitude.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
             .Replace("{{LONGITUDE}}", longitude.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
             .Replace("{{MEDIA_ID}}", mediaId, StringComparison.Ordinal)
+            .Replace("{{ERROR_CODE}}", errorCode.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
             .Replace("{{STATUS}}", status, StringComparison.Ordinal);
     }
 }

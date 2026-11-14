@@ -14,7 +14,9 @@ namespace SokagimdakiSorun.Messaging.Infrastructure;
 /// <list type="bullet">
 ///   <item>Alma: <c>Queued</c> (zamanı gelmiş) ve kirası dolmuş <c>Sending</c> satırlar <c>FOR UPDATE SKIP LOCKED</c> ile kısa bir
 ///         transaction'da <c>Sending</c> + kira + <c>attempt_count++</c> yapılır. HTTP çağrısı açık transaction içinde beklenmez.</item>
-///   <item>24 saatlik pencere kapalıysa serbest metin gönderilmez; mesaj açıklayıcı nedenle <c>Failed</c> olur (şablon yolu WS-10).</item>
+///   <item>24 saatlik pencere kapalıysa serbest metin gönderilmez. Şikâyet bildirimi (referansı olan mesaj) ve
+///         <c>WhatsApp__Templates__ComplaintUpdate</c> tanımlıysa onaylı şablon gönderilir (parametre: referans); aksi hâlde mesaj
+///         açıklayıcı nedenle <c>Failed</c> olur. Şablon adı ve dil kodu yapılandırmadadır, gövdesi Meta'dadır (WS-10).</item>
 ///   <item>Geçici hata: üstel backoff + jitter ile <c>Queued</c>; azami denemede <c>Failed</c>. Kalıcı hata: doğrudan <c>Failed</c>.</item>
 ///   <item>Kira dolmuş <c>Sending</c> (gönderim sırasında çökme) yeniden denenir: "gönderildi ama kaydedilemedi" durumunda çift mesaj
 ///         olasılığı ADR-0003'te kabul edilen risktir.</item>
@@ -25,14 +27,16 @@ internal sealed partial class OutboundSender(
     IServiceScopeFactory scopeFactory,
     IWhatsAppClient whatsApp,
     IOptions<MessagingOptions> options,
+    IOptions<WhatsAppOptions> whatsAppOptions,
     IConfiguration configuration,
     TimeProvider timeProvider,
     ILogger<OutboundSender> logger) : PollingWorker(configuration, timeProvider, logger)
 {
     public const string WindowClosedReason =
-        "window_closed: 24 saatlik hizmet penceresi kapalı; serbest metin gönderilmedi (onaylı şablon gerekir, WS-10).";
+        "window_closed: 24 saatlik hizmet penceresi kapalı; serbest metin gönderilmedi (onaylı şablon yapılandırılmamış veya mesaj şablona uygun değil).";
 
     private readonly MessagingOptions _options = options.Value;
+    private readonly WhatsAppTemplate _complaintTemplate = whatsAppOptions.Value.Templates.ComplaintUpdate;
 
     protected override bool Enabled => _options.OutboundSenderEnabled;
 
@@ -49,7 +53,8 @@ internal sealed partial class OutboundSender(
             }
 
             SendResult result;
-            if (!item.WindowOpen)
+            var viaTemplate = !item.WindowOpen && item.ComplaintReference is not null && _complaintTemplate.IsConfigured;
+            if (!item.WindowOpen && !viaTemplate)
             {
                 result = SendResult.Permanent(WindowClosedReason);
             }
@@ -57,8 +62,12 @@ internal sealed partial class OutboundSender(
             {
                 try
                 {
-                    result = await whatsApp.SendTextAsync(
-                        new OutboundText(item.BusinessPhoneNumberId, item.RecipientId, item.Text, item.MessageId), cancellationToken);
+                    result = viaTemplate
+                        ? await whatsApp.SendTemplateAsync(
+                            new OutboundTemplate(item.BusinessPhoneNumberId, item.RecipientId, _complaintTemplate.Name!,
+                                _complaintTemplate.LanguageCode!, [item.ComplaintReference!], item.MessageId), cancellationToken)
+                        : await whatsApp.SendTextAsync(
+                            new OutboundText(item.BusinessPhoneNumberId, item.RecipientId, item.Text, item.MessageId), cancellationToken);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {
@@ -70,7 +79,7 @@ internal sealed partial class OutboundSender(
                 }
             }
 
-            await RecordAsync(item.MessageId, result);
+            await RecordAsync(item.MessageId, result, viaTemplate);
         }
 
         return claimed.Count;
@@ -115,7 +124,7 @@ internal sealed partial class OutboundSender(
                     row.BeginSending(now + _options.LeaseDuration, now);
                     claimed.Add(new ClaimedMessage(
                         row.Id, conversation.BusinessPhoneNumberId, conversation.ExternalContactId, row.TextBody!,
-                        conversation.IsServiceWindowOpen(now, _options.ServiceWindow)));
+                        conversation.IsServiceWindowOpen(now, _options.ServiceWindow), row.ComplaintReference));
                 }
 
                 await db.SaveChangesAsync(cancellationToken);
@@ -125,7 +134,7 @@ internal sealed partial class OutboundSender(
         }
     }
 
-    private async Task RecordAsync(Guid messageId, SendResult result)
+    private async Task RecordAsync(Guid messageId, SendResult result, bool viaTemplate)
     {
         var scope = scopeFactory.CreateAsyncScope();
         await using (scope.ConfigureAwait(false))
@@ -141,7 +150,7 @@ internal sealed partial class OutboundSender(
             switch (result.Outcome)
             {
                 case SendOutcome.Sent:
-                    message.MarkSent(result.ProviderMessageId!, now);
+                    message.MarkSent(result.ProviderMessageId!, now, viaTemplate);
                     break;
                 case SendOutcome.TransientFailure when message.AttemptCount < _options.MaxAttempts:
                     var delay = RetryDelay.Compute(message.AttemptCount, _options.BaseRetryDelay, _options.MaxRetryDelay, Random.Shared.NextDouble());
@@ -162,7 +171,8 @@ internal sealed partial class OutboundSender(
         }
     }
 
-    private sealed record ClaimedMessage(Guid MessageId, string BusinessPhoneNumberId, string RecipientId, string Text, bool WindowOpen);
+    private sealed record ClaimedMessage(
+        Guid MessageId, string BusinessPhoneNumberId, string RecipientId, string Text, bool WindowOpen, string? ComplaintReference);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Giden mesaj {MessageId} gönderilemedi (deneme {Attempt}); {Delay} sonra yeniden denenecek.")]
     private static partial void LogRetryScheduled(ILogger logger, Guid messageId, int attempt, TimeSpan delay);

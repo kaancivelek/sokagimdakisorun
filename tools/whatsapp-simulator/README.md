@@ -39,3 +39,11 @@ Webhook GET doğrulaması:
 ```powershell
 Invoke-WebRequest 'http://localhost:5180/api/integrations/whatsapp/webhook?hub.mode=subscribe&hub.verify_token=local-dev-verify-token&hub.challenge=12345'
 ```
+
+## Gerçek Cloud API (WS-10)
+
+Simülatör yalnızca `Mock` sağlayıcı içindir; `WhatsApp__Provider=CloudApi` iken gelen webhook'ları yine imzalayıp gönderebilir, ama
+giden cevaplar ve medya indirme **gerçek Graph API'ye** gider. Bu yüzden simülatörü Cloud modunda çalıştırmayın. Otomatik testler Cloud
+istemcisini `FakeGraphHandler` (sahte `HttpMessageHandler`) ile çalıştırır; gerçek Meta'ya istek atılmaz.
+`fixtures/status.json` resmî dokümandaki güncel şekle (`pricing_model: PMP`, v24+ `conversation` yok) göre güncellendi;
+`fixtures/status-failed.json` `errors[].code` taşıyan `failed` durumudur (yalnızca testler kullanır).

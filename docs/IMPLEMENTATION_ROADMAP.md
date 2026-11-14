@@ -21,7 +21,7 @@ Sıra, gerçek teknik bağımlılıklara göre belirlenmiştir. İş akışları
 | WS-07 | Messaging modülü (mock sağlayıcı) | `feature/backend-messaging` | ✅ Tamamlandı (2026-11-12, `main`'e merge edildi) |
 | WS-08 | Reporting modülü | `feature/backend-reporting` | ✅ Tamamlandı (2026-11-13, `main`'e merge edildi) |
 | WS-09 | Yönetim paneli | `feature/frontend-admin` | ✅ Tamamlandı (2026-11-12, `main`'e merge edildi); dashboard WS-08'i bekliyor (yer tutucu) |
-| WS-10 | Gerçek WhatsApp Cloud API | `feature/whatsapp-cloud-integration` | İncelemede (2026-11-14; remote yok, PR açıklaması hazır; gerçek Meta hesabıyla elle doğrulama bekliyor) |
+| WS-10 | Gerçek WhatsApp Cloud API | `feature/whatsapp-cloud-integration` | Kod `main`'de (2026-11-14); gerçek Meta hesabıyla canlı doğrulama bekliyor |
 | WS-11 | Railway deployment | `chore/railway-deployment` | Sonraki faz |
 
 Durum değerleri: Bekliyor · Devam ediyor · İncelemede (PR açık) · ✅ Tamamlandı · ⛔ Engelli.

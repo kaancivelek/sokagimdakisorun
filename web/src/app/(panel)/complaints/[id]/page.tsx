@@ -20,6 +20,7 @@ import { apiClient, redirectToLoginIfUnauthenticated } from "@/lib/session/serve
 
 import { CommandPanel } from "./CommandPanel";
 import { CommentForm } from "./CommentForm";
+import { Conversation } from "./Conversation";
 
 export const metadata: Metadata = { title: "Şikâyet detayı" };
 
@@ -39,10 +40,11 @@ export default async function ComplaintDetailPage({ params }: PageProps<"/compla
   }
   const complaint = detail.data;
 
-  const [history, comments, attachments, lookups] = await Promise.all([
+  const [history, comments, attachments, messages, lookups] = await Promise.all([
     api.get<Schemas["ComplaintHistory"]>(`/api/v1/complaints/${id}/history`),
     api.get<Schemas["CommentItem"][]>(`/api/v1/complaints/${id}/comments`),
     api.get<Schemas["AttachmentItem"][]>(`/api/v1/complaints/${id}/attachments`),
+    api.get<Schemas["ComplaintConversation"]>(`/api/v1/complaints/${id}/messages`),
     loadLookups(api),
   ]);
 
@@ -140,7 +142,7 @@ export default async function ComplaintDetailPage({ params }: PageProps<"/compla
             </dl>
           </section>
 
-          <section className="card">
+          <section className="card" id="ekler">
             <h2>Fotoğraflar ve ekler</h2>
             {!attachments.ok ? (
               <ProblemAlert problem={attachments.problem} />
@@ -247,10 +249,7 @@ export default async function ComplaintDetailPage({ params }: PageProps<"/compla
 
           <section className="card">
             <h2>WhatsApp konuşması</h2>
-            <p className="muted">
-              Şikâyete bağlı mesajlar Messaging modülünün <code>GET /api/v1/complaints/{"{id}"}/messages</code> uç
-              noktasından gelecek; bu uç nokta henüz API sözleşmesinde yok.
-            </p>
+            <Conversation result={messages} />
           </section>
         </div>
 

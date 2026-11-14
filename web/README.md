@@ -19,7 +19,7 @@ API yerelde `dotnet run --project src/SokagimdakiSorun.Api` ile (`http://localho
 | `npm run gen:api` | `../docs/api/openapi.v1.json` → `src/api/schema.d.ts` (elle DTO yazılmaz; sözleşme değişince yeniden üretin ve commit'leyin) |
 | `npm run lint` | ESLint (`eslint-config-next`) |
 | `npm run typecheck` | `next typegen` + `tsc --noEmit` |
-| `npm test` | `node:test` birim testleri (oturum, `allowedActions`, 409, BFF sınırı) |
+| `npm test` | `node:test` birim testleri (oturum, `allowedActions`, 409, BFF sınırı, Özet ve WhatsApp konuşması görünüm modelleri) |
 | `npm run build` | Üretim derlemesi |
 
 ## Kurallar

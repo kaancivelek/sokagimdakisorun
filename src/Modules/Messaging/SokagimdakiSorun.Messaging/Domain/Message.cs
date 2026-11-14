@@ -12,6 +12,10 @@ internal sealed class Message
     public const int ProviderTypeMaxLength = 32;
     public const int DedupKeyMaxLength = 200;
     public const int LastErrorMaxLength = 500;
+    public const int ComplaintReferenceMaxLength = 32;
+
+    /// <summary>Şablonla gönderilmiş giden mesajın <see cref="ProviderMessageType"/> değeri.</summary>
+    public const string TemplateProviderType = "template";
 
     private Message()
     {
@@ -87,10 +91,18 @@ internal sealed class Message
         UpdatedAt = now,
     };
 
-    /// <summary>Kuyruğa giden metin mesajı.</summary>
+    /// <summary>
+    /// Şikâyet bildirimlerinde şikâyetin herkese açık referansı (<c>SS-XXXX-XXXX</c>). Hizmet penceresi kapalıyken gönderilen onaylı
+    /// şablonun tek parametresidir (WS-10); diğer mesajlarda <see langword="null"/>.
+    /// </summary>
+    public string? ComplaintReference { get; private set; }
+
+    /// <summary>Kuyruğa giden metin mesajı. <paramref name="complaintReference"/> yalnızca şikâyet bildirimlerinde verilir.</summary>
     public static Message Outbound(
-        Guid conversationId, string text, string dedupKey, Guid? intakeSessionId, Guid? complaintId, DateTimeOffset now) => new()
+        Guid conversationId, string text, string dedupKey, Guid? intakeSessionId, Guid? complaintId, DateTimeOffset now,
+        string? complaintReference = null) => new()
     {
+        ComplaintReference = string.IsNullOrWhiteSpace(complaintReference) ? null : Truncate(complaintReference, ComplaintReferenceMaxLength),
         Id = Guid.CreateVersion7(),
         ConversationId = conversationId,
         Direction = MessageDirection.Outbound,
@@ -123,8 +135,17 @@ internal sealed class Message
         UpdatedAt = now;
     }
 
-    public void MarkSent(string providerMessageId, DateTimeOffset now)
+    /// <summary>
+    /// Sağlayıcı kabul etti. <paramref name="viaTemplate"/>: pencere kapalı olduğu için metin yerine onaylı şablon gönderildi;
+    /// <see cref="ProviderMessageType"/> <c>template</c> olur (metin panelde bilgi amaçlı kalır, şikâyetçiye şablon gitti).
+    /// </summary>
+    public void MarkSent(string providerMessageId, DateTimeOffset now, bool viaTemplate = false)
     {
+        if (viaTemplate)
+        {
+            ProviderMessageType = TemplateProviderType;
+        }
+
         DeliveryStatus = DeliveryStatus.Sent;
         ProviderMessageId = providerMessageId;
         NextAttemptAt = null;

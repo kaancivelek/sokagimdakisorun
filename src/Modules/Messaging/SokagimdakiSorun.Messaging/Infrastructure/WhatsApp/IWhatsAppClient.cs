@@ -12,6 +12,15 @@ internal interface IWhatsAppClient
     /// </summary>
     Task<SendResult> SendTextAsync(OutboundText message, CancellationToken cancellationToken);
 
+    /// <summary>Konum mesajı gönderir (serbest mesaj; hizmet penceresi açık olmalıdır). Sınıflandırma <see cref="SendTextAsync"/> ile aynıdır.</summary>
+    Task<SendResult> SendLocationAsync(OutboundLocation message, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Onaylı, etkileşimli olmayan şablon mesajı gönderir (pencere dışında gönderilebilen tek tür). Şablonun gövdesi sağlayıcıdadır;
+    /// burada yalnızca ad, dil kodu ve gövde parametreleri taşınır.
+    /// </summary>
+    Task<SendResult> SendTemplateAsync(OutboundTemplate message, CancellationToken cancellationToken);
+
     /// <summary>Gelen medyayı indirir (Cloud API'de: medya kimliği → kısa ömürlü URL → yetkili indirme).</summary>
     Task<MediaDownloadResult> DownloadMediaAsync(string providerMediaId, CancellationToken cancellationToken);
 }
@@ -22,6 +31,18 @@ internal interface IWhatsAppClient
 /// <param name="Text">Metin. Loglanmaz.</param>
 /// <param name="MessageId">Bizim giden mesaj kimliğimiz (izleme ve mock için).</param>
 internal sealed record OutboundText(string BusinessPhoneNumberId, string RecipientId, string Text, Guid MessageId);
+
+/// <summary>Gönderilecek konum. Ad ve adres isteğe bağlıdır; hiçbiri loglanmaz.</summary>
+internal sealed record OutboundLocation(
+    string BusinessPhoneNumberId, string RecipientId, double Latitude, double Longitude, string? Name, string? Address, Guid MessageId);
+
+/// <summary>Gönderilecek şablon.</summary>
+/// <param name="TemplateName">Sağlayıcıdaki onaylı şablon adı.</param>
+/// <param name="LanguageCode">Şablonun dil kodu (ör. <c>tr</c>).</param>
+/// <param name="BodyParameters">Gövdedeki konumsal parametreler (<c>{{1}}</c>, <c>{{2}}</c>…) sırasıyla. Loglanmaz.</param>
+internal sealed record OutboundTemplate(
+    string BusinessPhoneNumberId, string RecipientId, string TemplateName, string LanguageCode, IReadOnlyList<string> BodyParameters,
+    Guid MessageId);
 
 /// <summary>Gönderim sonucu sınıfı.</summary>
 internal enum SendOutcome
